@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { MdPlayArrow } from 'react-icons/md';
+import { TbChevronDownLeft } from 'react-icons/tb';
 
 interface NavBarProps {
   openMore: boolean;
@@ -39,11 +41,17 @@ export default function NavBar({ openMore, setOpenMore }: NavBarProps) {
     <nav>
       {menu.map(({ label, path, clickHandler }, index) => (
         <Link href={path} key={index} onClick={(e) => clickHandler(e)}>
+          <MdPlayArrow />
           {label}
         </Link>
       ))}
       {openMore &&
-        menuMore.map((label, index) => <div key={index}>{label}</div>)}
+        menuMore.map((label, index) => (
+          <div key={index}>
+            <TbChevronDownLeft />
+            {label}
+          </div>
+        ))}
     </nav>
   );
 }

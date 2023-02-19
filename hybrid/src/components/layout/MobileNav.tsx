@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TfiMenu } from 'react-icons/tfi';
 import NavBar from './NavBar';
 
 export default function MobileNav() {
@@ -7,7 +8,9 @@ export default function MobileNav() {
 
   return (
     <div>
-      <div onClick={() => (setOpenNav(!openNav), setOpenMore(false))}>🍔</div>
+      <div onClick={() => (setOpenNav(!openNav), setOpenMore(false))}>
+        <TfiMenu />
+      </div>
       {openNav && <NavBar openMore={openMore} setOpenMore={setOpenMore} />}
     </div>
   );

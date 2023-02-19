@@ -1,7 +1,11 @@
+import { BsChatDotsFill } from 'react-icons/bs';
+
 export default function MobileChat() {
   return (
     <div>
-      <button>🍪</button>
+      <button>
+        <BsChatDotsFill />
+      </button>
     </div>
   );
 }
