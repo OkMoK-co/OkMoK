@@ -1,18 +1,21 @@
 'use client';
+import { useEffect, useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
 import SearchDetail from '@/components/record/SearchDetail';
 import SearchName from '@/components/record/SearchName';
 import Tags from '@/components/record/Tags';
-import { useEffect, useState } from 'react';
 
-//이거 어디에 두지? type을 따로 둬야할고가타
+const USERS_QUERY = gql`
+  query Users {
+    users {
+      name
+      profileMessage
+    }
+  }
+`;
+
 export interface filterType {
   [tag: string]: string | number;
-  // name?: string;
-  // opponent?: string;
-  // dateFrom?: undefined;
-  // dateTo?: undefined;
-  // leastMoves?: number;
-  // timelimits?: number;
 }
 export interface onAddFilterType {
   (tag: string, value: string | number): void;
@@ -21,6 +24,11 @@ export interface onAddFilterType {
 export default function Record() {
   const [detail, setDetail] = useState(false);
   const [filter, setFilter] = useState<filterType>({});
+  const { loading, error, data } = useQuery(USERS_QUERY, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+  });
   const onAddFilter: onAddFilterType = (tag, value) => {
     setFilter((cur) => ({ ...cur, [tag]: value }));
   };
@@ -35,6 +43,7 @@ export default function Record() {
     setDetail((cur) => !cur);
   };
   useEffect(() => {
+    //test용 코드입니다.
     console.log(filter);
   }, [filter]);
   return (

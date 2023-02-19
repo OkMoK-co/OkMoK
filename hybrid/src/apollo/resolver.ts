@@ -1,2 +1,23 @@
-/* todo: graphql api @지요 @대킴*/
-export {};
+//임시 데이터
+const users = [
+  {
+    name: 'jabae',
+    profileMessage: '📏🍐🛳️🚢',
+  },
+  {
+    name: 'jiyo',
+    profileMessage: '👼🏻',
+  },
+  {
+    name: 'donghyuk',
+    profileMessage: '🔐',
+  },
+];
+
+const resolvers = {
+  Query: {
+    users: () => users,
+  },
+};
+
+export default resolvers;

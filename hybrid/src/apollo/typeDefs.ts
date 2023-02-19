@@ -1,2 +1,11 @@
-/* todo: graphql api @지요 @대킴*/
-export {};
+import { gql } from '@apollo/client';
+
+export const typeDefs = gql`
+  type User {
+    name: String!
+    profileMessage: String
+  }
+  type Query {
+    users: [User]
+  }
+`;
