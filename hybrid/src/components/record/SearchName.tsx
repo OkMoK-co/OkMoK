@@ -3,6 +3,7 @@ import { useState } from 'react';
 interface searchNameProps {
   onAddFilter: (tag: string, value: string | number) => void;
 }
+
 export default function SearchName({ onAddFilter }: searchNameProps) {
   const [value, setValue] = useState('');
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
