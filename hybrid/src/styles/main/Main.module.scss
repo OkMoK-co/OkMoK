@@ -1,0 +1,57 @@
+.pageWrap {
+  background-color: black;
+  padding: 1rem;
+}
+
+.topComponent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: black;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: fit-content;
+  height: 2.5rem;
+  margin: 1rem;
+  padding: 0 0.8rem;
+  border: 0.1rem solid #808080;
+  background: black;
+  font-size: 1.2rem;
+  color: white;
+  input {
+    all: unset;
+    width: 15rem;
+  }
+  .icons {
+    span {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+    .reset {
+      color: gray;
+      cursor: pointer;
+    }
+  }
+}
+
+.makeRoom {
+  display: flex;
+  text-align: center;
+  background-color: #00ff00;
+  border-radius: 5rem;
+  color: white;
+  font-size: large;
+  font-weight: 500;
+  width: 10rem;
+  height: 3rem;
+  margin: 1rem;
+  button {
+    all: unset;
+    width: 15rem;
+  }
+}
