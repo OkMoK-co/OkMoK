@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { filterType, onAddFilterType } from '@/app/(main)/record/page';
-import styles from '@/styles/record/Record.module.scss';
 
 interface searchDetailProps {
   filters: filterType;
@@ -43,7 +42,7 @@ export default function SearchDetail({
             setOpponent(e.target.value);
           }}
         />
-        <div> dateFrom </div>
+        <div> Date </div>
         <input
           type='date'
           value={filters.dateFrom}
@@ -51,7 +50,7 @@ export default function SearchDetail({
             setDateFrom(e.target.value);
           }}
         />
-        <div>dateTo</div>
+        ~
         <input
           type='date'
           value={filters.dateTo}

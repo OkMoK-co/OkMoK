@@ -8,8 +8,13 @@ export const typeDefs = gql`
   type Record {
     gameId: Int
     createAt: String
-    moves: Int
-    limit: Int
+    leastMoves: Int
+    timeLimit: Int
+  }
+  type Records {
+    records: [Record]
+    currentPage: Int!
+    totalPage: Int!
   }
   input RecordFilter {
     page: Int!
@@ -18,11 +23,11 @@ export const typeDefs = gql`
     opponent: String
     dateFrom: String
     dateTo: String
-    moves: Int
+    leastMoves: Int
     timeLimit: Int
   }
   type Query {
     users: [User]
-    records(filter: RecordFilter): [Record]
+    records(filter: RecordFilter): Records
   }
 `;

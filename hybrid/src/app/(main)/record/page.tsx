@@ -7,11 +7,16 @@ import SearchName from '@/components/record/SearchName';
 import Tags from '@/components/record/Tags';
 import styles from '@/styles/record/Record.module.scss';
 
-const USERS_QUERY = gql`
-  query Users {
-    users {
-      name
-      profileMessage
+const RECORDS_QUERY = gql`
+  query Records($filter: RecordFilter) {
+    records(filter: $filter) {
+      records {
+        createAt
+        leastMoves
+        timeLimit
+      }
+      currentPage
+      totalPage
     }
   }
 `;
@@ -26,7 +31,14 @@ export interface onAddFilterType {
 export default function Record() {
   const [detail, setDetail] = useState(false);
   const [filter, setFilter] = useState<filterType>({});
-  const { loading, error, data } = useQuery(USERS_QUERY, {
+  const { loading, error, data } = useQuery(RECORDS_QUERY, {
+    variables: {
+      filter: {
+        page: 1,
+        count: 10,
+        ...filter,
+      },
+    },
     onCompleted: (data) => {
       console.log(data);
     },
@@ -44,10 +56,9 @@ export default function Record() {
   const onDetail = () => {
     setDetail((cur) => !cur);
   };
-  useEffect(() => {
-    //test용 코드입니다.
-    console.log(filter);
-  }, [filter]);
+  // useEffect(() => {
+  //   console.log(filter);
+  // }, [filter]);
   return (
     <div className={styles.pageWrap}>
       <h1>record</h1>
