@@ -1,5 +1,6 @@
 import { filterType } from '@/app/(main)/record/page';
 import Tag from './Tag';
+import styles from '@/styles/record/Record.module.scss';
 
 interface tagsProps {
   filter: filterType;
@@ -8,7 +9,7 @@ interface tagsProps {
 
 export default function Tags({ filter, onDeleteFilter }: tagsProps) {
   return (
-    <div>
+    <div className={styles.tags}>
       <Tag tagName='name' value={filter.name} onDeleteFilter={onDeleteFilter} />
       <Tag
         tagName='opponent'

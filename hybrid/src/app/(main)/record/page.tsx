@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
+import { FaFilter } from 'react-icons/fa';
 import SearchDetail from '@/components/record/SearchDetail';
 import SearchName from '@/components/record/SearchName';
 import Tags from '@/components/record/Tags';
+import styles from '@/styles/record/Record.module.scss';
 
 const USERS_QUERY = gql`
   query Users {
@@ -47,10 +49,14 @@ export default function Record() {
     console.log(filter);
   }, [filter]);
   return (
-    <div>
+    <div className={styles.pageWrap}>
       <h1>record</h1>
-      <SearchName onAddFilter={onAddFilter} />
-      <button onClick={onDetail}>more detail</button>
+      <div className={styles.searchName}>
+        <SearchName onAddFilter={onAddFilter} />
+        <button onClick={onDetail}>
+          <FaFilter />
+        </button>
+      </div>
       {detail ? (
         <SearchDetail
           filters={filter}

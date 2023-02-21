@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 import { filterType, onAddFilterType } from '@/app/(main)/record/page';
+import styles from '@/styles/record/Record.module.scss';
 
 interface searchDetailProps {
   filters: filterType;
@@ -27,9 +29,6 @@ export default function SearchDetail({
     if (timeLimit !== undefined) onAddFilter('timeLimit', timeLimit);
     onDetail();
   };
-  useEffect(() => {
-    console.log();
-  });
   return (
     <div>
       <form
@@ -78,7 +77,9 @@ export default function SearchDetail({
             setTimeLimit(Number(e.target.value));
           }}
         />
-        <button type='submit'>submit</button>
+        <button type='submit'>
+          <FaSearch />
+        </button>
       </form>
     </div>
   );

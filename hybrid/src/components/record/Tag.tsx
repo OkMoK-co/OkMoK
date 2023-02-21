@@ -1,3 +1,5 @@
+import styles from '@/styles/record/Record.module.scss';
+
 interface TagProps {
   tagName: string;
   value: string | number | undefined;
@@ -7,13 +9,16 @@ export default function Tag({ tagName, value, onDeleteFilter }: TagProps) {
   return (
     <>
       {value !== undefined ? (
-        <button
-          onClick={() => {
-            onDeleteFilter(tagName);
-          }}
-        >
-          {tagName} : {value}
-        </button>
+        <span className={styles.tag}>
+          {tagName}: {value}
+          <button
+            onClick={() => {
+              onDeleteFilter(tagName);
+            }}
+          >
+            x
+          </button>
+        </span>
       ) : null}
     </>
   );

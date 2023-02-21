@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+import styles from '@/styles/record/Record.module.scss';
 
 interface searchNameProps {
   onAddFilter: (tag: string, value: string | number) => void;
@@ -10,25 +12,23 @@ export default function SearchName({ onAddFilter }: searchNameProps) {
     event.preventDefault();
   };
   return (
-    <div>
-      <form onSubmit={onSubmitHandler}>
-        <label htmlFor='record-search-user'>Search user</label>
-        <input
-          id='record-search-user'
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-        />
-        <button
-          onClick={() => {
-            onAddFilter('name', value);
-            setValue('');
-          }}
-        >
-          search
-        </button>
-      </form>
-    </div>
+    <form onSubmit={onSubmitHandler}>
+      <label htmlFor='record-search-user'>유저 검색</label>
+      <input
+        id='record-search-user'
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          if (value) onAddFilter('name', value);
+          setValue('');
+        }}
+      >
+        <FaSearch />
+      </button>
+    </form>
   );
 }

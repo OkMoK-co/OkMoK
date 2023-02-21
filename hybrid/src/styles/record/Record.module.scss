@@ -1,0 +1,35 @@
+.pageWrap {
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  button {
+    background: none;
+    border: none;
+    color: #00ff00;
+  }
+  button:hover {
+    cursor: pointer;
+  }
+  input {
+    box-shadow: none;
+    color: white;
+    background-color: black;
+    border: solid white;
+  }
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag {
+  border: solid #00ff00;
+  padding: 0.1rem;
+  margin: 0.1rem;
+}
+.searchName {
+  display: flex;
+  justify-content: center;
+}

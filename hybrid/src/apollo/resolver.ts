@@ -17,6 +17,7 @@ const users = [
 const resolvers = {
   Query: {
     users: () => users,
+    records: () => [],
   },
 };
 
