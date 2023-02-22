@@ -3,6 +3,7 @@ import Footer from './Footer';
 import DesktopNav from './DesktopNav';
 import DesktopChat from './DesktopChat';
 import DesktopTaskBar from './DesktopTaskBar';
+import styles from '@/styles/layout/DesktopLayout.module.scss';
 
 interface DesktopLayoutProps {
   children: React.ReactNode;
@@ -10,17 +11,25 @@ interface DesktopLayoutProps {
 
 export default function DesktopLayout({ children }: DesktopLayoutProps) {
   return (
-    <>
+    <div className={styles.desktop}>
       <Header />
-      <DesktopNav />
-      <div>
-        <div>
-          {children}
-          <Footer />
-        </div>
-        <DesktopChat />
+      <div className={styles.navContainer}>
+        <DesktopNav />
       </div>
-      <DesktopTaskBar />
-    </>
+      <div className={styles.mainContainer}>
+        <div className={styles.wrap}>
+          <main>
+            {children}
+            <Footer />
+          </main>
+          <aside>
+            <DesktopChat />
+          </aside>
+        </div>
+      </div>
+      <div className={styles.taskbarContainer}>
+        <DesktopTaskBar />
+      </div>
+    </div>
   );
 }

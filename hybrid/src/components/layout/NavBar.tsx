@@ -41,7 +41,6 @@ export default function NavBar({ openMore, setOpenMore }: NavBarProps) {
     <nav>
       {menu.map(({ label, path, clickHandler }, index) => (
         <Link href={path} key={index} onClick={(e) => clickHandler(e)}>
-          <MdPlayArrow />
           {label}
         </Link>
       ))}

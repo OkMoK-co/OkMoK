@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { FaUserAlt } from 'react-icons/fa';
 import NavBar from './NavBar';
 
 export default function DesktopNav() {
   const [openMore, setOpenMore] = useState(false);
 
-  return <NavBar openMore={openMore} setOpenMore={setOpenMore} />;
+  return (
+    <nav>
+      <NavBar openMore={openMore} setOpenMore={setOpenMore} />
+      <FaUserAlt />
+    </nav>
+  );
 }
