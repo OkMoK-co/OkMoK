@@ -41,9 +41,6 @@ export default function Record() {
         ...filter,
       },
     },
-    onCompleted: (data) => {
-      console.log(data);
-    },
   });
   const onAddFilter: onAddFilterType = (tag, value) => {
     setFilter((cur) => ({ ...cur, [tag]: value }));
@@ -58,9 +55,6 @@ export default function Record() {
   const onDetail = () => {
     setDetail((cur) => !cur);
   };
-  // useEffect(() => {
-  //   console.log(filter);
-  // }, [filter]);
   return (
     <div className={styles.pageWrap}>
       <h1>record</h1>

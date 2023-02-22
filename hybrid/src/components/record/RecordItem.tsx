@@ -7,7 +7,6 @@ interface recordItemProps {
 }
 
 export default function RecordItem({ record }: recordItemProps) {
-  console.log('item: ', record);
   return (
     <div>
       <div> {record.createAt} </div>
