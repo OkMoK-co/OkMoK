@@ -6,11 +6,13 @@ import SearchDetail from '@/components/record/SearchDetail';
 import SearchName from '@/components/record/SearchName';
 import Tags from '@/components/record/Tags';
 import styles from '@/styles/record/Record.module.scss';
+import RecordItem from '@/components/record/RecordItem';
 
 const RECORDS_QUERY = gql`
   query Records($filter: RecordFilter) {
     records(filter: $filter) {
       records {
+        gameId
         createAt
         leastMoves
         timeLimit
@@ -77,7 +79,11 @@ export default function Record() {
       ) : (
         <Tags filter={filter} onDeleteFilter={onDeleteFilter} />
       )}
-      <div> 리스트... </div>
+      <div>
+        {data?.records.records.map((e: any) => (
+          <RecordItem key={e.gameId} record={e} />
+        ))}
+      </div>
       <div> 페이지네이션 </div>
     </div>
   );

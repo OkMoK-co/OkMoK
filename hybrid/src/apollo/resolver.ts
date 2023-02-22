@@ -18,14 +18,14 @@ const records = [
   {
     gameId: 1,
     createAt: '2023-02-21 14:30',
-    moves: 50,
-    limit: 30,
+    leastMoves: 50,
+    timeLimit: 30,
   },
   {
     gameId: 2,
     createAt: '2023-02-21 14:33',
-    moves: 32,
-    limit: 30,
+    leastMoves: 32,
+    timeLimit: 30,
   },
 ];
 
