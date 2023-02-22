@@ -1,2 +1,8 @@
-/* todo: graphql api @지요 @대킴*/
-export {};
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import resolvers from './resolver';
+import { typeDefs } from './typeDefs';
+
+export const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
