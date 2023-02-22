@@ -1,1 +1,41 @@
-/* todo: 공통으로 사용하는 스타일 추가 @자배 */
+/* color */
+$lime: #00ff00;
+$yellow: #ffff00;
+$orange: #ffa500;
+$fuchsia: #ff00ff;
+$aqua: #00ffff;
+$navy: #000080;
+$red: #ff0000;
+$blue: #0000ff;
+
+$light-gray: #d9d9d9;
+$gray: #808080;
+
+$black: #000000;
+$white: #ffffff;
+
+/* radius */
+$small-radius: 0.5rem;
+$big-radius: 5rem;
+
+/* border-line */
+$small-line: 2px solid $gray;
+$middle-line: 3px solid $gray;
+$big-line: 12px solid $gray;
+
+/* font size */
+$logo-font: 3rem;
+$menu-font: 1.5rem;
+$content-font: 1.2rem;
+
+/* mixins */
+@mixin backdrop {
+  // 전체 백드롭, 헤더 빼고 백드롭
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+}
