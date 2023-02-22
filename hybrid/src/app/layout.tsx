@@ -1,4 +1,5 @@
 import Apollo from '@/components/provider/Apollo';
+import '@/styles/_global.scss';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -9,9 +10,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang='en'>
       <head />
       <body>
-        <div>
-          <Apollo>{children}</Apollo>
-        </div>
+        <Apollo>{children}</Apollo>
       </body>
     </html>
   );
