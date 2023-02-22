@@ -8,7 +8,7 @@ interface TagProps {
 export default function Tag({ tagName, value, onDeleteFilter }: TagProps) {
   return (
     <>
-      {value !== undefined ? (
+      {value !== undefined && (
         <span className={styles.tag}>
           {tagName}: {value}
           <button
@@ -19,7 +19,7 @@ export default function Tag({ tagName, value, onDeleteFilter }: TagProps) {
             x
           </button>
         </span>
-      ) : null}
+      )}
     </>
   );
 }
