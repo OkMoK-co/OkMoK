@@ -33,7 +33,6 @@ const resolvers = {
   Query: {
     users: () => users,
     records: (_: any, { filter }: any) => {
-      console.log(filter);
       //filter를 자알 적용시켜서 디비에다가 자알 요청하구..?!
       //페이지도 자알 계산하구?! 그래서 자알 리턴해줘야하는데?!
       //어떻게 해야할까요?
