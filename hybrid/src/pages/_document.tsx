@@ -36,7 +36,12 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head></Head>
+        <Head>
+          <title>OkMoK</title>
+          <meta name='description' content='OkMoK와 즐거운 오목생활' />
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+          <link rel='icon' href='/favicon.ico' />
+        </Head>
         <body>
           <Main />
           <NextScript />
