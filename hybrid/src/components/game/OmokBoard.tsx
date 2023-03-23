@@ -29,12 +29,12 @@ export default function OmokBoard() {
     if (!ctx) return;
     ctx.strokeStyle = '#00ff00';
     for (let i = 0; i < 15; i++) {
-      // horizontal line draw
+      // vertical line draw
       ctx.beginPath();
       ctx.moveTo(blank + i * 25, blank);
       ctx.lineTo(blank + i * 25, height - blank);
       ctx.stroke();
-      // vertical line draw
+      // horizontal line draw
       ctx.beginPath();
       ctx.moveTo(blank, blank + i * 25);
       ctx.lineTo(height - blank, blank + i * 25);
@@ -80,8 +80,8 @@ export default function OmokBoard() {
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
     ctx.beginPath();
-    ctx.strokeStyle = '#00ff00';
-    ctx.fillStyle = '#00ff00';
+    ctx.strokeStyle = '#ff00ff';
+    ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
     ctx.arc(blank + x * 25, blank + y * 25, 10, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();

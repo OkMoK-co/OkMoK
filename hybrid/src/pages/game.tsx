@@ -1,18 +1,26 @@
-import type { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import type { NextPageWithLayout } from '@/pages/_app';
+import styled from 'styled-components';
 import GameLayout from '@/components/layout/GameLayout';
 import GiveupButton from '@/components/game/GiveupButton';
 import Timer from '@/components/game/Timer';
 import Players from '@/components/game/Players';
 import OmokBoard from '@/components/game/OmokBoard';
+import KickoutButton from '@/components/game/KickoutButton';
+
+const GameTopWrap = styled.div`
+  display: flex;
+`;
 
 const Game: NextPageWithLayout = () => {
+  const [inGame, setInGame] = useState(false); //상태관리를 써야할까?
   return (
     <main>
-      <div>
+      <GameTopWrap>
         <div>Room: [125]</div>
         <GiveupButton />
-      </div>
+        <KickoutButton />
+      </GameTopWrap>
       <OmokBoard />
       <Timer />
       <Players />
