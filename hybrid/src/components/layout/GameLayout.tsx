@@ -1,6 +1,6 @@
 import Header from './Header';
 import Footer from './Footer';
-import ExitButton from '@/components/game/exitButton';
+import ExitButton from '@/components/game/ExitButton';
 
 interface GameLayoutProps {
   children: React.ReactNode;
