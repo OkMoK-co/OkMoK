@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { ReactElement, ReactNode } from 'react';
@@ -19,6 +20,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
+      <Head>
+        <title>OkMoK</title>
+        <meta name='description' content='OkMoK와 즐거운 오목생활' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         {getLayout(<Component {...pageProps} />)}
