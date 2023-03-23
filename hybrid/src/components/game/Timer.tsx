@@ -1,5 +1,15 @@
 import styled from 'styled-components';
 
+export default function Timer() {
+  return (
+    <TimerWrap>
+      <div>30</div>
+      <PutButton>put</PutButton>
+      <div>30</div>
+    </TimerWrap>
+  );
+}
+
 const TimerWrap = styled.div`
   display: flex;
   justify-content: space-around;
@@ -18,13 +28,3 @@ const PutButton = styled.button`
     cursor: pointer;
   }
 `;
-
-export default function Timer() {
-  return (
-    <TimerWrap>
-      <div>30</div>
-      <PutButton>put</PutButton>
-      <div>30</div>
-    </TimerWrap>
-  );
-}

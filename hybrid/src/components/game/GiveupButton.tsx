@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
+export default function GiveupButton() {
+  const [isActivate, setActivate] = useState(false);
+  return <Button active={isActivate}> give up </Button>;
+}
+
 const Button = styled.button<{ active: boolean }>`
   color: ${(props) => (props.active ? '#00ff00' : '#808080')};
   background-color: black;
@@ -12,8 +17,3 @@ const Button = styled.button<{ active: boolean }>`
     cursor: pointer;
   }
 `;
-
-export default function GiveupButton() {
-  const [isActivate, setActivate] = useState(false);
-  return <Button active={isActivate}> give up </Button>;
-}

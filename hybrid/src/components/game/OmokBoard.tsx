@@ -1,22 +1,6 @@
 import { MouseEventHandler, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-const BoardWrap = styled.div`
-  height: 400px;
-`;
-
-const PointBoard = styled.canvas`
-  position: absolute;
-  z-index: 1;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-const Canvas = styled.canvas`
-  position: absolute;
-  z-index: 0;
-`;
-
 export default function OmokBoard() {
   let canvasRef = useRef<HTMLCanvasElement>(null);
   let pointRef = useRef<HTMLCanvasElement>(null);
@@ -111,3 +95,19 @@ export default function OmokBoard() {
     </BoardWrap>
   );
 }
+
+const BoardWrap = styled.div`
+  height: 400px;
+`;
+
+const PointBoard = styled.canvas`
+  position: absolute;
+  z-index: 1;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+const Canvas = styled.canvas`
+  position: absolute;
+  z-index: 0;
+`;

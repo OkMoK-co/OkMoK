@@ -8,10 +8,6 @@ import Players from '@/components/game/Players';
 import OmokBoard from '@/components/game/OmokBoard';
 import KickoutButton from '@/components/game/KickoutButton';
 
-const GameTopWrap = styled.div`
-  display: flex;
-`;
-
 const Game: NextPageWithLayout = () => {
   const [inGame, setInGame] = useState(false); //상태관리를 써야할까?
   return (
@@ -33,3 +29,7 @@ Game.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default Game;
+
+const GameTopWrap = styled.div`
+  display: flex;
+`;
