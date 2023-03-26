@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement } from 'react';
 import type { NextPageWithLayout } from '@/pages/_app';
 import styled from 'styled-components';
 import GameLayout from '@/components/layout/GameLayout';
@@ -9,7 +9,6 @@ import OmokBoard from '@/components/game/OmokBoard';
 import KickoutButton from '@/components/game/KickoutButton';
 
 const Game: NextPageWithLayout = () => {
-  const [inGame, setInGame] = useState(false); //상태관리를 써야할까?
   return (
     <main>
       <GameTopWrap>

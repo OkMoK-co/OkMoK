@@ -1,8 +1,8 @@
-import Head from 'next/head';
-import { Inter } from 'next/font/google';
+import Rooms from '@/components/main/Rooms';
 import SearchBar from '@/components/main/SearchBar';
 import PlayButton from '@/components/main/PlayButton';
-import Rooms from '@/components/main/Rooms';
+
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
