@@ -14,6 +14,8 @@ void PacketManager::init(const int maxSessionCount)
 	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
 
 	_recvFuntionDictionary[(int)PACKET_ID::DEV_ECHO] = &PacketManager::processDevEcho;
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_CREATE_REQUEST] = &PacketManager::processCreateRoom;
+
 }
 
 /**
@@ -49,6 +51,24 @@ void PacketManager::processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco:
 	memcpy(&echoData, (char*)&packetSize, 2);
 	memcpy(&echoData[2], (char*)&packetID, 2);
 	memcpy(&echoData[5], pBodyData, bodySize);
+
+	sendPacketFunc(connIndex, echoData, packetSize);
+}
+
+/**
+ * @brief 방 생성 요청을 처리합니다.
+ * @details 방 생성 여부에 대한 결과를 클라이언트에게 전송합니다.
+*/
+void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	auto packetID = (Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE;
+	auto packetSize = (Poco::UInt16)(bodySize + sizeof(PACKET_HEADER));
+	auto packetOption = (Poco::UInt8)PACKET_OPTION::SUCCESS;
+	char echoData[1024] = { 0, };
+
+	memcpy(&echoData, (char*)&packetSize, 2);
+	memcpy(&echoData[2], (char*)&packetID, 2);
+	memcpy(&echoData[4], (char*)&packetOption, 1);
 
 	sendPacketFunc(connIndex, echoData, packetSize);
 }

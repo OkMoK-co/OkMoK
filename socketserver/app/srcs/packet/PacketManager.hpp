@@ -13,6 +13,7 @@ class PacketManager {
 		void init(const int maxSessionCount);
 		void process(Poco::Int32 connectionIndex, const Poco::UInt16 packetID, char* pBuf, Poco::Int16 bodySize);
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
+		void processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 
 		std::function<void(const int, const char*, const int)> sendPacketFunc;
 
