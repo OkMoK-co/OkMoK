@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { socketState } from '@/utils/recoil/socket';
+import { responseState, socketState } from '@/utils/recoil/socket';
 import { routeSocketFunction } from '@/socket/routeSocketFunction';
 import { useRouter } from 'next/router';
+import { responseType } from '@/utils/type/socketType';
 
 interface SocketConnectProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface SocketConnectProps {
 
 export default function SocketConnect({ children }: SocketConnectProps) {
   const [socket, setSocket] = useRecoilState<WebSocket | null>(socketState);
+  const [response, setResponse] = useRecoilState<responseType>(responseState);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export default function SocketConnect({ children }: SocketConnectProps) {
 
       newSocket.addEventListener('open', () => {
         console.log('WebSocket connection opened!');
+        setSocket(newSocket);
       });
 
       newSocket.addEventListener('message', (event) => {
@@ -29,15 +32,13 @@ export default function SocketConnect({ children }: SocketConnectProps) {
         const size = data.getInt16(0, true);
         const id = data.getInt16(2, true);
         const option = data.getInt8(4);
-
-        routeSocketFunction[id]({ size, option, data, router });
+        routeSocketFunction[id]({ data, option, router }, setResponse);
+        setResponse((prev) => ({ ...prev, packetId: id }));
       });
 
       newSocket.addEventListener('close', () => {
         console.log('WebSocket connection closed!');
       });
-
-      setSocket(newSocket);
     }
 
     return () => {

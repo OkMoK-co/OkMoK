@@ -1,24 +1,22 @@
+import { responseState } from '@/utils/recoil/socket';
+import { responseType } from '@/utils/type/socketType';
+import { useRecoilValue } from 'recoil';
 import RoomItem from './RoomItem';
 
-const dummy = Array.from({ length: 10 }, (_, i) => {
-  return {
-    number: i + 1,
-    limit: 30,
-    players: { player1: 'jabae', player2: 'daekim' },
-  };
-});
-
 export default function Rooms() {
+  const { rooms } = useRecoilValue<responseType>(responseState);
+
   return (
     <div>
-      {dummy.map(({ number, limit, players }) => (
-        <RoomItem
-          key={number}
-          number={number}
-          limit={limit}
-          players={players}
-        />
-      ))}
+      {rooms &&
+        rooms?.rooms.map(({ roomNumber, limitTime, player1, player2 }) => (
+          <RoomItem
+            key={roomNumber}
+            roomNumber={roomNumber}
+            limitTime={limitTime}
+            players={{ player1, player2 }}
+          />
+        ))}
     </div>
   );
 }

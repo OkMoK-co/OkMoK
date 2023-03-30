@@ -81,7 +81,7 @@ void	WebSocketServer::run()
 			/**
 			* 패킷 큐가 비어있을 경우, PacketID는 0이며 sleep() 상태로 전환합니다.
 			*/
-			if (packetInfo.PacketID == 0)
+			if (packetInfo.packetID == 0)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				break;
@@ -91,19 +91,19 @@ void	WebSocketServer::run()
 				/**
 				* 패킷 ID가 유효할 경우, 해당 패킷 요청을 처리합니다.
 				*/
-				if (packetInfo.PacketID > (short)PACKET_ID::INTERNAL_END)
+				if (packetInfo.packetID > (short)PACKET_ID::INTERNAL_END)
 				{
-					_packetManager.process(packetInfo.SessionIndex,
-					                       packetInfo.PacketID,
+					_packetManager.process(packetInfo.sessionIndex,
+					                       packetInfo.packetID,
 					                       packetInfo.pBodyData,
-					                       packetInfo.PacketBodySize);
+					                       packetInfo.packetBodySize);
 				}
 				/**
 				* 패킷 ID가 PACKET_ID::INTERNAL_CLOSE일 경우, 해당 세션을 해제합니다.
 				*/
-				if (packetInfo.PacketID == (short)PACKET_ID::INTERNAL_CLOSE)
+				if (packetInfo.packetID == (short)PACKET_ID::INTERNAL_CLOSE)
 				{
-					unRegisterSesssion(packetInfo.SessionIndex);
+					unRegisterSesssion(packetInfo.sessionIndex);
 				}
 			}
 		}
@@ -173,9 +173,9 @@ void	WebSocketServer::addPacketQueue(const bool bInternal, const Poco::Int32 ses
 	std::lock_guard<std::mutex> lock(_mutexPacketQueue);
 
 	RecvPacketInfo packetInfo;
-	packetInfo.SessionIndex = sessionIndex;
-	packetInfo.PacketID = pktID;
-	packetInfo.PacketBodySize = bodySize;
+	packetInfo.sessionIndex = sessionIndex;
+	packetInfo.packetID = pktID;
+	packetInfo.packetBodySize = bodySize;
 	packetInfo.pBodyData = pDataPos;
 
 	_packetQueue.push_back(packetInfo);
@@ -240,6 +240,7 @@ void	WebSocketServer::unRegisterSesssion(const int index)
 */
 void	WebSocketServer::sendPacket(const int sessionIndex, const char* pData, const int size)
 {
+	std::cout << "send sessionIDX : " << sessionIndex << std::endl;
 	_sessions[sessionIndex]->sendPacket(pData, size);
 }
 

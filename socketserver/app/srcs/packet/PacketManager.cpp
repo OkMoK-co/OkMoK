@@ -11,11 +11,15 @@
  */
 void PacketManager::init(const int maxSessionCount)
 {
-	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
+	_roomManager.init(maxSessionCount, 2);
+	_userManager.init(maxSessionCount);
 
+	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
 	_recvFuntionDictionary[(int)PACKET_ID::DEV_ECHO] = &PacketManager::processDevEcho;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_CREATE_REQUEST] = &PacketManager::processCreateRoom;
-
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_ENTER_REQUEST] = &PacketManager::processEnterRoom;
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_INFO_REQUEST] = &PacketManager::processInfoRoom;
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_MAIN_REQUEST] = &PacketManager::processEnterMain;
 }
 
 /**
@@ -33,6 +37,17 @@ void PacketManager::process(int connectionIndex, const Poco::UInt16 packetID, ch
 	{
 		(this->*(iter->second))(connectionIndex, pBuf, bodySize);
 	}
+}
+
+template <typename T>
+T PacketManager::makePacketHeader(Poco::UInt16 packetID)
+{
+	T packet;
+	packet.packetID = packetID;
+	packet.packetSize = 5;
+	packet.type = 1;
+
+	return packet;
 }
 
 /**
@@ -61,14 +76,69 @@ void PacketManager::processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco:
 */
 void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	auto packetID = (Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE;
-	auto packetSize = (Poco::UInt16)(bodySize + sizeof(PACKET_HEADER));
-	auto packetOption = (Poco::UInt8)PACKET_OPTION::SUCCESS;
-	char echoData[1024] = { 0, };
+	ROOM_CREATE_RESPONSE_PACKET packet = makePacketHeader<ROOM_CREATE_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
+	
+	Poco::Int32 roomIndex = _roomManager.takeInactiveRoomIndex();
+	if(roomIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
 
-	memcpy(&echoData, (char*)&packetSize, 2);
-	memcpy(&echoData[2], (char*)&packetID, 2);
-	memcpy(&echoData[4], (char*)&packetOption, 1);
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	_roomManager.createRoom((Poco::UInt32)roomIndex, user);
+	_userManager.deleteMainUsers(user);
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+	
+	R_ROOM_LIST_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_ROOM_LIST_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
+	
+	sendMainRooms(broadcastPacket);
+	
+	std::list<User *> mainUsers = _userManager.getMainUsers();
+	for (User *user : mainUsers)
+		sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
+}
 
-	sendPacketFunc(connIndex, echoData, packetSize);
+void PacketManager::processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	
+}
+
+void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	
+}
+
+void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	ROOM_MAIN_RESPONSE_PACKET packet = makePacketHeader<ROOM_MAIN_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
+
+	
+	sendMainRooms(packet);
+	
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+
+	_userManager.addMainUsers(user);
+
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+}
+
+void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet) {
+	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
+
+	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
+
+	int size = std::min(10, (int)enterableRooms.size());
+	packet.roomCount = (Poco::UInt8)size;
+	for (int i = 0; i < size; ++i, ++it)
+	{
+		packet.rooms[i].roomNumber = (*it).second->getRoomNumber();
+		packet.rooms[i].limitTime = (*it).second->getLimitTime();
+		packet.rooms[i].isFull = 0;
+		packet.rooms[i].player1 = (*it).second->getUsers().front()->getIndex();
+		packet.rooms[i].player2 = 0;
+	}
+
+	packet.packetSize += (1 + sizeof(ROOM) * size);
 }

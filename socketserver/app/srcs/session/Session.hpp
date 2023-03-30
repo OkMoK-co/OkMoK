@@ -142,30 +142,26 @@ private:
 
 			auto pHeader = (PACKET_HEADER*)pBuffer;
 
-			if (pHeader->PacketSize > MAX_PACKET_SIZE)
+			if (pHeader->packetSize > MAX_PACKET_SIZE)
 			{
 				break;
 			}
 
-			std::cout << pHeader->PacketSize << std::endl;
-			std::cout << pHeader->PacketID << std::endl;
-			std::cout << pHeader->Type << std::endl;
-
-			if (remainByte < pHeader->PacketSize)
+			if (remainByte < pHeader->packetSize)
 			{
 				break;
 			}
 
-			auto bodySize = pHeader->PacketSize - PACKET_HEADER_LENGTH;
+			auto bodySize = pHeader->packetSize - PACKET_HEADER_LENGTH;
 			auto packetID = pBuffer[PACKET_SIZE_LENGTH];
-			std::cout << pHeader->PacketID << std::endl;
+			std::cout << pHeader->packetID << std::endl;
 			std::cout << bodySize << std::endl;
 			std::cout << &pBuffer[PACKET_HEADER_LENGTH] << std::endl;
-			_addPacketFunc(false, mIndex, pHeader->PacketID, bodySize, &pBuffer[PACKET_HEADER_LENGTH]);
+			_addPacketFunc(false, mIndex, pHeader->packetID, bodySize, &pBuffer[PACKET_HEADER_LENGTH]);
 
-			remainByte -= pHeader->PacketSize;
-			totalReadSize += pHeader->PacketSize;
-			pBuffer += pHeader->PacketSize;
+			remainByte -= pHeader->packetSize;
+			totalReadSize += pHeader->packetSize;
+			pBuffer += pHeader->packetSize;
 		}
 
 		return totalReadSize;
