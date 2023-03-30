@@ -15,10 +15,12 @@ class PacketManager
 
 		void init(const int maxSessionCount);
 		void process(Poco::Int32 connectionIndex, const Poco::UInt16 packetID, char* pBuf, Poco::Int16 bodySize);
-
-		PACKET_HEADER makePacketHeader(Poco::UInt16 packetID);
+		
+		template <typename T>
+		T makePacketHeader(Poco::UInt16 packetID);
+		
 		void makeEnterableRooms();
-		void sendMainRooms(ROOM_MAIN_RESPONSE_PACKET *packet);
+		void sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet);
 		
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);

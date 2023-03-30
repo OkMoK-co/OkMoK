@@ -147,10 +147,6 @@ private:
 				break;
 			}
 
-			std::cout << pHeader->packetSize << std::endl;
-			std::cout << pHeader->packetID << std::endl;
-			std::cout << pHeader->type << std::endl;
-
 			if (remainByte < pHeader->packetSize)
 			{
 				break;

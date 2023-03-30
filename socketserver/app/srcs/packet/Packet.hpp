@@ -39,7 +39,6 @@ struct ROOM
 	Poco::UInt64 player1 = 0;
 	Poco::UInt64 player2 = 0;
 };
-#pragma pack(pop)
 
 struct ROOM_MAIN_RESPONSE_PACKET : public PACKET_HEADER
 {
@@ -51,3 +50,5 @@ struct R_ROOM_LIST_RESPONSE_PACKET : public ROOM_MAIN_RESPONSE_PACKET
 {
 
 };
+
+#pragma pack(pop)

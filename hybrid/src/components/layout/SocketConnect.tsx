@@ -22,6 +22,7 @@ export default function SocketConnect({ children }: SocketConnectProps) {
 
       newSocket.addEventListener('open', () => {
         console.log('WebSocket connection opened!');
+        setSocket(newSocket);
       });
 
       newSocket.addEventListener('message', (event) => {
@@ -38,8 +39,6 @@ export default function SocketConnect({ children }: SocketConnectProps) {
       newSocket.addEventListener('close', () => {
         console.log('WebSocket connection closed!');
       });
-
-      setSocket(newSocket);
     }
 
     return () => {

@@ -240,7 +240,7 @@ void	WebSocketServer::unRegisterSesssion(const int index)
 */
 void	WebSocketServer::sendPacket(const int sessionIndex, const char* pData, const int size)
 {
-	std::cout << "sessionIDX  " << sessionIndex << std::endl;
+	std::cout << "send sessionIDX : " << sessionIndex << std::endl;
 	_sessions[sessionIndex]->sendPacket(pData, size);
 }
 

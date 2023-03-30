@@ -39,9 +39,10 @@ void PacketManager::process(int connectionIndex, const Poco::UInt16 packetID, ch
 	}
 }
 
-PACKET_HEADER PacketManager::makePacketHeader(Poco::UInt16 packetID)
+template <typename T>
+T PacketManager::makePacketHeader(Poco::UInt16 packetID)
 {
-	PACKET_HEADER packet;
+	T packet;
 	packet.packetID = packetID;
 	packet.packetSize = 5;
 	packet.type = 1;
@@ -75,8 +76,7 @@ void PacketManager::processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco:
 */
 void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	PACKET_HEADER header = makePacketHeader((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
-	ROOM_CREATE_RESPONSE_PACKET& packet = static_cast<ROOM_CREATE_RESPONSE_PACKET&>(header);
+	ROOM_CREATE_RESPONSE_PACKET packet = makePacketHeader<ROOM_CREATE_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
 	
 	Poco::Int32 roomIndex = _roomManager.takeInactiveRoomIndex();
 	if(roomIndex == -1)
@@ -91,10 +91,9 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 	_userManager.deleteMainUsers(user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 	
-	PACKET_HEADER broadcastHeader = makePacketHeader((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
-	R_ROOM_LIST_RESPONSE_PACKET& broadcastPacket = static_cast<R_ROOM_LIST_RESPONSE_PACKET&>(broadcastHeader);
+	R_ROOM_LIST_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_ROOM_LIST_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
 	
-	sendMainRooms(&broadcastPacket);
+	sendMainRooms(broadcastPacket);
 	
 	std::list<User *> mainUsers = _userManager.getMainUsers();
 	for (User *user : mainUsers)
@@ -113,31 +112,33 @@ void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 
 void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	PACKET_HEADER header = makePacketHeader((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
-	ROOM_MAIN_RESPONSE_PACKET& packet = static_cast<ROOM_MAIN_RESPONSE_PACKET&>(header);
+	ROOM_MAIN_RESPONSE_PACKET packet = makePacketHeader<ROOM_MAIN_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
+
 	
-	sendMainRooms(&packet);
+	sendMainRooms(packet);
 	
 	User *user = _userManager.takeUserByConnIndex(connIndex);
+
 	_userManager.addMainUsers(user);
 
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
-void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET *packet) {
+void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet) {
 	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
 
 	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
 
 	int size = std::min(10, (int)enterableRooms.size());
-	packet->roomCount = (Poco::UInt8)size;
-	for (int i = 0; i < size; ++i, ++it) {
-		packet->rooms[i].roomNumber = (*it).second->getRoomNumber();
-		packet->rooms[i].limitTime = (*it).second->getLimitTime();
-		packet->rooms[i].isFull = 0;
-		packet->rooms[i].player1 = (*it).second->getUsers().front()->getIndex();
-		packet->rooms[i].player2 = 0;
+	packet.roomCount = (Poco::UInt8)size;
+	for (int i = 0; i < size; ++i, ++it)
+	{
+		packet.rooms[i].roomNumber = (*it).second->getRoomNumber();
+		packet.rooms[i].limitTime = (*it).second->getLimitTime();
+		packet.rooms[i].isFull = 0;
+		packet.rooms[i].player1 = (*it).second->getUsers().front()->getIndex();
+		packet.rooms[i].player2 = 0;
 	}
 
-	packet->packetSize += (1 + sizeof(ROOM) * size);
+	packet.packetSize += (1 + sizeof(ROOM) * size);
 }

@@ -30,13 +30,12 @@ export function viewMainRoomsHandler(
   for (let i = 0; i < totalCount; i++) {
     let tmp: room = {
       roomNumber: data.getInt32(6 + i * 22, true),
-      limitTime: data.getInt16(10 + i * 22, true),
-      isFull: !!data.getInt8(12 + i * 22),
-      player1:
-        'guest' +
-        data.getInt32(13 + i * 22, true).toString() +
-        data.getInt32(17 + i * 22, true).toString(),
-      player2: '',
+      limitTime: data.getInt8(10 + i * 22),
+      isFull: !!data.getInt8(11 + i * 22),
+      player1: 'guest' + data.getBigUint64(12 + i * 22, true).toString(),
+      player2: data.getBigUint64(20 + i * 22, true)
+        ? 'guest' + data.getBigUint64(12 + i * 22, true).toString()
+        : '',
     };
     body.push(tmp);
   }
