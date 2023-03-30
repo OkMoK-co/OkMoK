@@ -11,12 +11,6 @@ export interface requestType {
   body?: ArrayBuffer;
 }
 
-/** response type */
-export interface responseType {
-  packet: packetType;
-  setResponse: SetterOrUpdater<responseType>;
-}
-
 export interface rooms {
   totalCount: number;
   rooms: room[];
