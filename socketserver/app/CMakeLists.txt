@@ -17,6 +17,10 @@ add_executable(socketserver
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/server/WebsocketServer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/packet/PacketManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/user/UserManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/user/User.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/room/RoomManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/room/Room.cpp
 )
 
 # 링커에 필요한 라이브러리 설정
