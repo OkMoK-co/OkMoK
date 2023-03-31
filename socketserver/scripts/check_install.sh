@@ -10,6 +10,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	fi
 
+	if command -v cmake &> /dev/null 2>&1; then
+		echo "✅ Cmake installed"
+	else
+		brew install cmake
+	fi
+
 	# Check install Poco_lib By MacOS
 	if command brew list | grep poco >/dev/null 2>&1; then
 		echo "✅ Poco library installed"
@@ -27,6 +33,13 @@ if [[ "$(uname)" == "Linux" ]]; then
 	else
 		echo "Poco library is not installed. Installing Poco..."
 		apk add poco-dev
+	fi
+
+	if command -v cmake &> /dev/null 2>&1; then
+		echo "✅ Cmake installed"
+	else
+		echo "Cmake is not installed. Installing Cmake..."
+		apk add cmake
 	fi
 fi
 
