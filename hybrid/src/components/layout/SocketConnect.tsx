@@ -9,7 +9,7 @@ interface SocketConnectProps {
 }
 
 export default function SocketConnect({ children }: SocketConnectProps) {
-  const [socket, setSocket] = useRecoilState<WebSocket | null>(socketState);
+  const [socket, setSocket] = useRecoilState(socketState);
   const [response, setResponse] = useRecoilState(responseState);
   const router = useRouter();
 

@@ -11,7 +11,7 @@ import PlayButton from '@/components/main/PlayButton';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-  const socket = useRecoilValue<WebSocket | null>(socketState);
+  const socket = useRecoilValue(socketState);
 
   useEffect(() => {
     if (socket) {
