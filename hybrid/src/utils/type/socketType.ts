@@ -2,8 +2,14 @@ import { SetterOrUpdater } from 'recoil';
 
 export interface packetType {
   data: DataView;
+  id: number;
   option: number;
   router: any;
+}
+
+export interface routeSocketFunctionProps {
+  packet: packetType;
+  setResponse: SetterOrUpdater<responseType>;
 }
 
 export interface requestType {
@@ -11,10 +17,11 @@ export interface requestType {
   body?: ArrayBuffer;
 }
 
-export interface rooms {
-  totalCount: number;
-  rooms: room[];
+export interface responseType {
+  packetId: number;
+  data: rooms | roomDetail | null;
 }
+
 export interface room {
   roomNumber: number;
   limitTime: number;
@@ -23,15 +30,14 @@ export interface room {
   player2: string;
 }
 
+export interface rooms {
+  totalCount: number;
+  rooms: room[];
+}
+
 export interface roomDetail {
   roomNumber: number;
   limitTime: number;
   player1: string;
   player2: string;
-}
-
-export interface responseType {
-  packetId: number;
-  rooms?: rooms | null;
-  roomDetail?: roomDetail | null;
 }

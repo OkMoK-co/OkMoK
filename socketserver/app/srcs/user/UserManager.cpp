@@ -24,9 +24,9 @@ std::list<User *> UserManager::getMainUsers()
 
 void UserManager::init(Poco::Int32 maxUserCount)
 {
-	_userPool = std::vector<User*>(_maxUserCount);
-    _maxUserCount = maxUserCount;
+  _maxUserCount = maxUserCount;
 	_currentUserCount = 0;
+	_userPool = std::vector<User*>(_maxUserCount);
 
 	for (int i = 0; i < _maxUserCount; i++) {
 		_userPool[i] = new User();

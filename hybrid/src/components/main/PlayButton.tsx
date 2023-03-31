@@ -1,14 +1,13 @@
 import { useRecoilValue } from 'recoil';
 import { socketState } from '@/utils/recoil/socket';
 import { requestHandler } from '@/socket/requestHandler';
+import { socketVar } from '@/socket/variable';
 
 export default function PlayButton() {
-  const socket = useRecoilValue<WebSocket | null>(socketState);
+  const socket = useRecoilValue(socketState);
 
   const enterRoomHandler = () => {
-    const id = Number(`${process.env.NEXT_PUBLIC_ROOM_CREATE_REQUEST}`);
-
-    socket?.send(requestHandler({ id }));
+    socket?.send(requestHandler({ id: socketVar.ROOM_CREATE_REQUEST }));
   };
 
   return <button onClick={enterRoomHandler}>🚀 PLAY</button>;
