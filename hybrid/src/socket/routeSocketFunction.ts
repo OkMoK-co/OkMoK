@@ -1,5 +1,10 @@
 import { socketVar } from './variable';
-import { createRoomHandler, viewMainRoomsHandler } from './responseHandler';
+import {
+  createRoomHandler,
+  viewMainRoomsHandler,
+  loginHandler,
+  recvPutHandler,
+} from './responseHandler';
 import { routeSocketFunctionProps } from '@/utils/type/socketType';
 
 export const routeSocketFunction: {
@@ -7,4 +12,6 @@ export const routeSocketFunction: {
 } = {
   [socketVar.ROOM_CREATE_RESPONSE]: createRoomHandler,
   [socketVar.ROOM_MAIN_RESPONSE]: viewMainRoomsHandler,
+  [socketVar.LOGIN_RESPONSE]: loginHandler,
+  [socketVar.GAME_PUT_RESPONSE]: recvPutHandler,
 };

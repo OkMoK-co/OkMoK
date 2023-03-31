@@ -1,7 +1,13 @@
-import { MouseEventHandler, useEffect, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import TimerAndPut from '@/components/game/TimerAndPut';
 
 export default function OmokBoard() {
+  const [pointXY, setPointXY] = useState([-1, -1]);
+  const pointXYHandler = (x: number, y: number) => {
+    setPointXY([x, y]);
+  };
+
   let canvasRef = useRef<HTMLCanvasElement>(null);
   let pointRef = useRef<HTMLCanvasElement>(null);
   let blank = 12.5;
@@ -57,6 +63,7 @@ export default function OmokBoard() {
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
     let { x, y } = getCoordinate(event);
+    pointXYHandler(x, y);
     if (x < 0 || y < 0) return;
     let pointCanvas = pointRef.current;
     if (!pointCanvas) return;
@@ -88,11 +95,14 @@ export default function OmokBoard() {
   }, []);
 
   return (
-    <BoardWrap>
-      <Canvas ref={canvasRef}>This browser is not supported.</Canvas>
-      <PointBoard ref={pointRef} onClick={drawPoint}></PointBoard>
-      {/* pointboard는 내차례일 때만 활성화되어야함 */}
-    </BoardWrap>
+    <div>
+      <BoardWrap>
+        <Canvas ref={canvasRef}>This browser is not supported.</Canvas>
+        <PointBoard ref={pointRef} onClick={drawPoint}></PointBoard>
+        {/* pointboard는 내차례일 때만 활성화되어야함 */}
+      </BoardWrap>
+      <TimerAndPut point={pointXY} />
+    </div>
   );
 }
 
