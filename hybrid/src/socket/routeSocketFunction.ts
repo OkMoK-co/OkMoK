@@ -1,13 +1,10 @@
+import { socketVar } from './variable';
 import { createRoomHandler, viewMainRoomsHandler } from './responseHandler';
-import { packetType, responseType } from '@/utils/type/socketType';
-import { SetterOrUpdater } from 'recoil';
+import { routeSocketFunctionProps } from '@/utils/type/socketType';
 
 export const routeSocketFunction: {
-  [key: string]: (
-    packet: packetType,
-    setResponse: SetterOrUpdater<responseType>
-  ) => void;
+  [key: number]: ({ packet, setResponse }: routeSocketFunctionProps) => void;
 } = {
-  [`${process.env.NEXT_PUBLIC_ROOM_CREATE_RESPONSE}`]: createRoomHandler,
-  [`${process.env.NEXT_PUBLIC_ROOM_MAIN_RESPONSE}`]: viewMainRoomsHandler,
+  [socketVar.ROOM_CREATE_RESPONSE]: createRoomHandler,
+  [socketVar.ROOM_MAIN_RESPONSE]: viewMainRoomsHandler,
 };
