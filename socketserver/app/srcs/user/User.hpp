@@ -9,7 +9,7 @@ class User
         ~User();
 
         Poco::UInt32 getIndex();
-        Poco::UInt64 getNumber();
+        Poco::UInt64 getUserId();
 
         void enterRoom(Poco::Int32 roomIndex);
         void leaveRoom();
@@ -17,7 +17,7 @@ class User
         void logout();
         
     private:
-        Poco::UInt32 _index = -1;
-        Poco::Int32 _roomIndex = -1;
-        Poco::UInt64 _number = 0;
+        Poco::Int32 _index;
+        Poco::Int32 _roomIndex;
+        Poco::UInt64 _userId;
 };

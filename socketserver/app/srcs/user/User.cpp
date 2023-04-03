@@ -23,14 +23,14 @@ void User::leaveRoom()
 void User::login(Poco::UInt32 connectIndex)
 {
     _index = connectIndex;
-    _number = connectIndex + 1;
+    _userId = connectIndex + 1;
 }
 
 void User::logout()
 {
     _index = -1;
     _roomIndex = -1;
-    _number = 0;
+    _userId = 0;
 }
 
 Poco::UInt32 User::getIndex()
@@ -38,7 +38,7 @@ Poco::UInt32 User::getIndex()
     return _index;
 }
 
-Poco::UInt64 User::getNumber() 
+Poco::UInt64 User::getUserId() 
 {
-    return _number;
+    return _userId;
 }

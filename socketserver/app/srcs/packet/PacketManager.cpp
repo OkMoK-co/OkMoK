@@ -132,7 +132,7 @@ void PacketManager::processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::I
 	LOGIN_RESPONSE_PACKET packet = makePacketHeader<LOGIN_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::LOGIN_RESPONSE);
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 
-	packet.userId = user->getNumber();
+	packet.userId = user->getUserId();
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
@@ -155,7 +155,7 @@ void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet)
 		packet.rooms[i].roomNumber = (*it).second->getRoomNumber();
 		packet.rooms[i].limitTime = (*it).second->getLimitTime();
 		packet.rooms[i].isFull = 0;
-		packet.rooms[i].player1 = (*it).second->getUsers().front()->getNumber();
+		packet.rooms[i].player1 = (*it).second->getUsers().front()->getUserId();
 		packet.rooms[i].player2 = 0;
 	}
 

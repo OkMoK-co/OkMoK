@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import TimerAndPut from '@/components/game/TimerAndPut';
 
 export default function OmokBoard() {
-  const [pointXY, setPointXY] = useState([-1, -1]);
+  const [pointXY, setPointXY] = useState<number[]>([-1, -1]);
   const pointXYHandler = (x: number, y: number) => {
     setPointXY([x, y]);
   };

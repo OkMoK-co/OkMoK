@@ -48,7 +48,7 @@ export function loginHandler({
   setResponse,
 }: routeSocketFunctionProps) {
   if (!option) {
-    alert('Failed to get mainRooms');
+    alert('Failed to login');
     return;
   }
   let userId = data.getBigUint64(5, true);
@@ -58,7 +58,7 @@ export function loginHandler({
   }));
 }
 
-export function recvPutHandler({
+export function receivePutHandler({
   packet: { data, id, option },
   setResponse,
 }: routeSocketFunctionProps) {
