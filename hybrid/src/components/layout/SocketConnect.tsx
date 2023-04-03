@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { responseState, socketState } from '@/utils/recoil/socket';
-import { routeSocketFunction } from '@/socket/routeSocketFunction';
 import { socketVar } from '@/socket/variable';
 import { requestHandler } from '@/socket/requestHandler';
+import { routeResponse } from '@/socket/routeResponse';
 
 interface SocketConnectProps {
   children: React.ReactNode;
@@ -33,10 +33,11 @@ export default function SocketConnect({ children }: SocketConnectProps) {
 
         const data = new DataView(event.data);
 
-        const size = data.getInt16(0, true);
-        const id = data.getInt16(2, true);
-        const option = data.getInt8(4);
-        routeSocketFunction[id]({
+        const size = data.getUint16(0, true);
+        const id = data.getUint16(2, true);
+        const option = data.getUint8(4);
+
+        routeResponse[id]({
           packet: { data, id, option, router },
           setResponse,
         });

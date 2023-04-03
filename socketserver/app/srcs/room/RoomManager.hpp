@@ -13,11 +13,15 @@ class RoomManager
 	public:
 		RoomManager();
 		~RoomManager();
+		
+		std::vector<Room*> getRoomPool();
+		std::map<Poco::UInt32, Room*> getEnterableRooms();
 
 		void init(Poco::UInt32 maxRoomCount, Poco::UInt32 maxUserCount);
-		Poco::Int32 takeInactiveRoomIndex(); 
+		Poco::Int32 takeInactiveRoomIndex();
 		void createRoom(Poco::UInt32 roomIndex, User *user);
-		std::map<Poco::UInt32, Room*> getEnterableRooms();
+		void deleteRoom(Poco::UInt32 roomIndex);
+		void exitRoom(Poco::UInt32 roomIndex, User *user);
 
 	private:
 		std::set<Poco::UInt32> _inactiveRoomIndexes;

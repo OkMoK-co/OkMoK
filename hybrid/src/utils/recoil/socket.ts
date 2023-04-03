@@ -13,7 +13,7 @@ export const responseState = selector<any>({
   get: ({ get }) => {},
   set: ({ set }, newValue) => {
     switch (newValue.packetId) {
-      case socketVar.ROOM_MAIN_RESPONSE:
+      case socketVar.ROOM_MAIN_RESPONSE | socketVar.R_ROOM_LIST_RESPONSE:
         set(roomsState, newValue.data);
         break;
       case socketVar.LOGIN_RESPONSE:
