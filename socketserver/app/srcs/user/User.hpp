@@ -8,14 +8,16 @@ class User
         User();
         ~User();
 
+        Poco::UInt32 getIndex();
+        Poco::UInt64 getUserId();
+
         void enterRoom(Poco::Int32 roomIndex);
         void leaveRoom();
         void login(Poco::UInt32 connectIndex);
         void logout();
         
-        Poco::UInt32 getIndex();
-        
     private:
-        Poco::UInt32 _index = -1;
-        Poco::Int32 _roomIndex = -1;
+        Poco::Int32 _index;
+        Poco::Int32 _roomIndex;
+        Poco::UInt64 _userId;
 };

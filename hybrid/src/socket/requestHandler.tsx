@@ -14,6 +14,10 @@ export function requestHandler({ id, body }: requestType) {
   data.setInt16(2, id, true);
   /* packet option */
   data.setInt8(4, 0);
+  if (body) {
+    const bodyData = new Uint8Array(buffer);
+    bodyData.set(new Uint8Array(body), HEADER_SIZE);
+  }
 
   return data;
 }

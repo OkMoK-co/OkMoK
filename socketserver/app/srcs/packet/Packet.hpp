@@ -51,4 +51,13 @@ struct R_ROOM_LIST_RESPONSE_PACKET : public ROOM_MAIN_RESPONSE_PACKET
 
 };
 
+struct LOGIN_RESPONSE_PACKET : public PACKET_HEADER
+{
+	Poco::UInt64 userId = 0;
+};
+
+struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 
+{
+};
+
 #pragma pack(pop)

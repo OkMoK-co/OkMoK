@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { rooms } from '@/utils/type/socketType';
+import { rooms, user } from '@/utils/type/socketType';
 import { socketVar } from '@/socket/variable';
 
 export const socketState = atom<WebSocket | null>({
@@ -16,6 +16,9 @@ export const responseState = selector<any>({
       case socketVar.ROOM_MAIN_RESPONSE:
         set(roomsState, newValue.data);
         break;
+      case socketVar.LOGIN_RESPONSE:
+        set(userState, newValue.data);
+        break;
     }
   },
 });
@@ -24,4 +27,9 @@ export const responseState = selector<any>({
 export const roomsState = atom<rooms>({
   key: 'roomsState',
   default: { totalCount: 0, rooms: [] },
+});
+
+export const userState = atom<user>({
+  key: 'userState',
+  default: { id: BigInt(0) },
 });

@@ -42,3 +42,28 @@ export function viewMainRoomsHandler({
     data: { totalCount, rooms: body },
   }));
 }
+
+export function loginHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeSocketFunctionProps) {
+  if (!option) {
+    alert('Failed to login');
+    return;
+  }
+  let userId = data.getBigUint64(5, true);
+  setResponse(() => ({
+    packetId: id,
+    data: { id: userId },
+  }));
+}
+
+export function receivePutHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeSocketFunctionProps) {
+  if (!option) {
+    alert('Failed to put');
+    return;
+  }
+}

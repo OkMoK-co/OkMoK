@@ -20,6 +20,9 @@ void PacketManager::init(const int maxSessionCount)
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_ENTER_REQUEST] = &PacketManager::processEnterRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_INFO_REQUEST] = &PacketManager::processInfoRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_MAIN_REQUEST] = &PacketManager::processEnterMain;
+	_recvFuntionDictionary[(int)PACKET_ID::LOGIN_REQUEST] = &PacketManager::processLogin;
+	_recvFuntionDictionary[(int)PACKET_ID::GAME_PUT_REQUEST] = &PacketManager::processPutGame;
+
 }
 
 /**
@@ -44,7 +47,7 @@ T PacketManager::makePacketHeader(Poco::UInt16 packetID)
 {
 	T packet;
 	packet.packetID = packetID;
-	packet.packetSize = 5;
+	packet.packetSize = sizeof(T);
 	packet.type = 1;
 
 	return packet;
@@ -124,7 +127,23 @@ void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poc
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
-void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet) {
+void PacketManager::processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	LOGIN_RESPONSE_PACKET packet = makePacketHeader<LOGIN_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::LOGIN_RESPONSE);
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+
+	packet.userId = user->getUserId();
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+}
+
+void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	GAME_PUT_RESONSE_PACKET packet = makePacketHeader<GAME_PUT_RESONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+}
+
+void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet) 
+{
 	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
 
 	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
@@ -136,9 +155,9 @@ void PacketManager::sendMainRooms(ROOM_MAIN_RESPONSE_PACKET &packet) {
 		packet.rooms[i].roomNumber = (*it).second->getRoomNumber();
 		packet.rooms[i].limitTime = (*it).second->getLimitTime();
 		packet.rooms[i].isFull = 0;
-		packet.rooms[i].player1 = (*it).second->getUsers().front()->getIndex();
+		packet.rooms[i].player1 = (*it).second->getUsers().front()->getUserId();
 		packet.rooms[i].player2 = 0;
 	}
 
-	packet.packetSize += (1 + sizeof(ROOM) * size);
+	packet.packetSize = sizeof(PACKET_HEADER) + (1 + sizeof(ROOM) * size);
 }
