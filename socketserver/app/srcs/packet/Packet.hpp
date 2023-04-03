@@ -25,10 +25,9 @@ struct PACKET_HEADER
 	Poco::UInt8 type = 1; //압축여부 암호화여부 등 속성을 알아내는 값
 };
 
-
-struct ROOM_CREATE_RESPONSE_PACKET : public PACKET_HEADER
+struct LOGIN_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+	Poco::UInt64 userId = 0;
 };
 
 struct ROOM
@@ -51,13 +50,32 @@ struct R_ROOM_LIST_RESPONSE_PACKET : public ROOM_MAIN_RESPONSE_PACKET
 
 };
 
-struct LOGIN_RESPONSE_PACKET : public PACKET_HEADER
+struct ROOM_CREATE_RESPONSE_PACKET : public PACKET_HEADER
 {
-	Poco::UInt64 userId = 0;
+	
+};
+
+struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
+{
+	
+};
+
+struct ROOM_DETAIL
+{
+	Poco::UInt32 roomNumber = 0;
+	Poco::UInt8 limitTime = 0;
+	Poco::UInt64 player1 = 0;
+	Poco::UInt64 player2 = 0;
+};
+
+struct R_ROOM_INFO_RESPONSE : public PACKET_HEADER
+{
+	struct ROOM_DETAIL roomDetail;
 };
 
 struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 
 {
+
 };
 
 #pragma pack(pop)

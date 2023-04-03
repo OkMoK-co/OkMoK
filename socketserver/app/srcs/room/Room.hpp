@@ -20,8 +20,6 @@ class Room
 
         void enterUser(User *user);
         void leaveUser(User *user);
-        
-        
 
     private:
         Poco::UInt32 _roomIndex;

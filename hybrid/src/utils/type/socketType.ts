@@ -7,7 +7,7 @@ export interface packetType {
   router: any;
 }
 
-export interface routeSocketFunctionProps {
+export interface routeResponseProps {
   packet: packetType;
   setResponse: SetterOrUpdater<responseType>;
 }
