@@ -5,10 +5,6 @@
 #include "Packet.hpp"
 #include "PacketManager.hpp"
 
-/**
- * @brief 패킷 ID별 처리할 함수를 등록합니다.
- * @param[in] maxSessionCount 서버가 최대 허용할 클라이언트의 수 입니다.
- */
 void PacketManager::init(const int maxSessionCount)
 {
 	_roomManager.init(maxSessionCount, 2);
@@ -28,14 +24,6 @@ void PacketManager::init(const int maxSessionCount)
 
 }
 
-/**
- * @brief 패킷 요청을 처리할 함수를 호출합니다.
- * @details 전달 받은 패킷ID를 통해 m_RecvFuntionDictionary에 정의된 함수를 찾아 호출합니다.
- * @param connectionIndex 패킷을 요청한 SessionID입니다.
- * @param packetID 요청된 패킷의 ID입니다.
- * @param pBuf 요청된 패킷의 데이터입니다.
- * @param bodySize 요청된 패킷의 사이즈입나다.
- */
 void PacketManager::process(int connectionIndex, const Poco::UInt16 packetID, char* pBuf, Poco::Int16 bodySize)
 {
 	auto iter = _recvFuntionDictionary.find(packetID);
@@ -56,13 +44,6 @@ T PacketManager::makePacketHeader(Poco::UInt16 packetID)
 	return packet;
 }
 
-/**
- * @brief 에코 요청을 처리합니다.
- * @details 요청 받은 데이터를 클라이언트에게 그대로 전송합니다.
- * @param connIndex 요청한 클라이언트의 SessionID입니다.
- * @param pBodyData 요청된 패킷의 데이터입니다.
- * @param bodySize 요청된 패킷의 사이즈입니다.
- */
 void PacketManager::processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	auto packetID = (Poco::UInt16)PACKET_ID::DEV_ECHO;
@@ -90,9 +71,7 @@ void PacketManager::makeMainRooms(T &packet) {
 	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
 
 	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
-
 	int size = std::min(10, (int)enterableRooms.size());
-	packet.roomCount = (Poco::UInt8)size;
 	for (int i = 0; i < size; ++i, ++it)
 	{
 		packet.rooms[i].roomNumber = (*it).second->getRoomNumber();
@@ -102,6 +81,7 @@ void PacketManager::makeMainRooms(T &packet) {
 		packet.rooms[i].player2 = 0;
 	}
 
+	packet.roomCount = (Poco::UInt8)size;
 	packet.packetSize = sizeof(PACKET_HEADER) + (1 + sizeof(ROOM) * size);
 }
 
@@ -111,7 +91,8 @@ void PacketManager::broadcastMainRooms() {
 	makeMainRooms(broadcastPacket);
 	
 	std::list<User *> mainUsers = _userManager.getMainUsers();
-	for (User *user : mainUsers) {
+	for (User *user : mainUsers)
+	{
 		sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
 	}
 }
@@ -127,10 +108,6 @@ void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poc
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
-/**
- * @brief 방 생성 요청을 처리합니다.
- * @details 방 생성 여부에 대한 결과를 클라이언트에게 전송하고, 메인 방 목록을 갱신합니다.
-*/
 void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_CREATE_RESPONSE_PACKET packet = makePacketHeader<ROOM_CREATE_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
@@ -193,8 +170,10 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 		broadcastPacket.roomDetail.player2 = 0;
 
 		std::list<User*> restUsers = room->getUsers();
-		for (User *user : restUsers) 
+		for (User *user : restUsers)
+		{
 			sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
+		}
 	}
 }
 
