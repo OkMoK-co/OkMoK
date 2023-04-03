@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { responseState, socketState } from '@/utils/recoil/socket';
 import { routeSocketFunction } from '@/socket/routeSocketFunction';
-import { loginRequestHandler } from '@/socket/requestHandler';
+import { socketVar } from '@/socket/variable';
+import { requestHandler } from '@/socket/requestHandler';
 
 interface SocketConnectProps {
   children: React.ReactNode;
@@ -23,7 +24,8 @@ export default function SocketConnect({ children }: SocketConnectProps) {
       newSocket.addEventListener('open', () => {
         console.log('WebSocket connection opened!');
         setSocket(newSocket);
-        loginRequestHandler(newSocket);
+        const loginData = requestHandler({ id: socketVar.LOGIN_REQUEST });
+        newSocket.send(loginData);
       });
 
       newSocket.addEventListener('message', (event) => {

@@ -1,5 +1,4 @@
 import { requestType } from '../utils/type/socketType';
-import { socketVar } from '@/socket/variable';
 
 export function requestHandler({ id, body }: requestType) {
   const HEADER_SIZE = 5;
@@ -22,13 +21,3 @@ export function requestHandler({ id, body }: requestType) {
 
   return data;
 }
-
-export const loginRequestHandler = (socket: WebSocket) => {
-  const buffer = new ArrayBuffer(5);
-  const data = new DataView(buffer);
-  const packetSize = 5;
-
-  data.setUint16(0, packetSize, true);
-  data.setUint16(2, socketVar.LOGIN_REQUEST, true);
-  socket.send(data);
-};
