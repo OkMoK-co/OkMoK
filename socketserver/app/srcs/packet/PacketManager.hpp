@@ -22,7 +22,10 @@ class PacketManager
 		template <typename T>
 		void makeMainRooms(T &packet);
 		void broadcastMainRooms();
-		
+		template <typename T>
+		void makeInfoRoom(T &packet, Poco::Int32 roomIndex);
+		void broadcastInfoRoom(Poco::Int32 roomIndex);
+
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		

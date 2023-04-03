@@ -128,6 +128,36 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 	broadcastMainRooms();
 }
 
+template <typename T>
+void PacketManager::makeInfoRoom(T &packet, Poco::Int32 roomIndex)
+{
+	Room *room = _roomManager.getRoomPool()[roomIndex];
+
+	packet.roomInfo.roomNumber = room->getRoomNumber();
+	packet.roomInfo.limitTime = room->getLimitTime();
+	packet.roomInfo.player1 = room->getUsers().front()->getUserId();
+	packet.roomInfo.player2 = room->getUsers().size() == 2 ? room->getUsers().back()->getUserId() : 0;
+}
+
+void PacketManager::broadcastInfoRoom(Poco::Int32 roomIndex)
+{
+	Room *room = _roomManager.getRoomPool()[roomIndex];
+	if (room->getCurrentUserCount() == 0) 
+	{
+		return ;
+	}
+
+	R_ROOM_INFO_RESPONSE_PACKET packet = makePacketHeader<R_ROOM_INFO_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_ROOM_INFO_RESPONSE);
+	
+	makeInfoRoom(packet, roomIndex);
+
+	std::list<User*> restUsers = room->getUsers();
+	for (User *user : restUsers)
+	{
+		sendPacketFunc(user->getIndex(), (char *)&packet, packet.packetSize);
+	}
+}
+
 void PacketManager::processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	
@@ -135,7 +165,18 @@ void PacketManager::processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poc
 
 void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	
+	ROOM_INFO_RESPONSE_PACKET packet = makePacketHeader<ROOM_INFO_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_INFO_RESPONSE);
+
+	Poco::Int32 roomIndex = _userManager.takeUserByConnIndex(connIndex)->getRoomIndex();
+	if(roomIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	makeInfoRoom(packet, roomIndex);
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
 void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
@@ -156,25 +197,7 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	broadcastMainRooms();
-
-	/* 방에 남은 인원에게 실시간 방 정보 변경 코드 */
-	/* todo : INFO_ROOM 과 함수 통일 시켜줄 예정 */
-	Room* room = _roomManager.getRoomPool()[roomIndex];
-	if (room->getCurrentUserCount()) 
-	{
-		R_ROOM_INFO_RESPONSE broadcastPacket = makePacketHeader<R_ROOM_INFO_RESPONSE>((Poco::UInt16)PACKET_ID::R_ROOM_INFO_RESPONSE);
-
-		broadcastPacket.roomDetail.roomNumber = room->getRoomNumber();
-		broadcastPacket.roomDetail.limitTime = room->getLimitTime();
-		broadcastPacket.roomDetail.player1 = room->getUsers().front()->getIndex();
-		broadcastPacket.roomDetail.player2 = 0;
-
-		std::list<User*> restUsers = room->getUsers();
-		for (User *user : restUsers)
-		{
-			sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
-		}
-	}
+	broadcastInfoRoom(roomIndex);
 }
 
 void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
