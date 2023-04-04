@@ -1,11 +1,15 @@
+import { useRecoilValue } from 'recoil';
+import { roomInfoState } from '@/utils/recoil/socket';
 import styled from 'styled-components';
 
 export default function Players() {
+  const { player1, player2 } = useRecoilValue(roomInfoState);
+
   return (
     <PlayersWrap>
-      <div>name</div>
+      <div>{player1}</div>
       <div> vs </div>
-      <div>name</div>
+      <div>{player2}</div>
     </PlayersWrap>
   );
 }

@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { rooms, user } from '@/utils/type/socketType';
+import { user, rooms, roomInfo } from '@/utils/type/socketType';
 import { socketVar } from '@/socket/variable';
 
 export const socketState = atom<WebSocket | null>({
@@ -20,17 +20,26 @@ export const responseState = selector<any>({
       case socketVar.R_ROOM_LIST_RESPONSE:
         set(roomsState, newValue.data);
         break;
+      case socketVar.ROOM_INFO_RESPONSE:
+      case socketVar.R_ROOM_INFO_RESPONSE:
+        set(roomInfoState, newValue.data);
+        break;
     }
   },
 });
 
 /* todo: 각 컴포넌트에서 사용할 상태를 추가해주세요 */
+export const userState = atom<user>({
+  key: 'userState',
+  default: { id: BigInt(0) },
+});
+
 export const roomsState = atom<rooms>({
   key: 'roomsState',
   default: { totalCount: 0, rooms: [] },
 });
 
-export const userState = atom<user>({
-  key: 'userState',
-  default: { id: BigInt(0) },
+export const roomInfoState = atom<roomInfo>({
+  key: 'roomInfoState',
+  default: { roomNumber: 0, limitTime: 0, player1: '', player2: '' },
 });

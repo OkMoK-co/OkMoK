@@ -60,7 +60,7 @@ struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
 	
 };
 
-struct ROOM_DETAIL
+struct ROOM_INFO
 {
 	Poco::UInt32 roomNumber = 0;
 	Poco::UInt8 limitTime = 0;
@@ -68,9 +68,14 @@ struct ROOM_DETAIL
 	Poco::UInt64 player2 = 0;
 };
 
-struct R_ROOM_INFO_RESPONSE : public PACKET_HEADER
+struct ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
 {
-	struct ROOM_DETAIL roomDetail;
+	struct ROOM_INFO roomInfo;
+};
+
+struct R_ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
+{
+	struct ROOM_INFO roomInfo;
 };
 
 struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 

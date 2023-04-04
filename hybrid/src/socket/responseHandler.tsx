@@ -59,6 +59,28 @@ export function createRoomHandler({
   router.push('/game');
 }
 
+export function infoRoomHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to get room info');
+    return;
+  }
+
+  const roomNumber = data.getUint32(5, true);
+  const limitTime = data.getUint8(9);
+  const player1 = 'guest' + data.getBigUint64(10, true).toString();
+  const player2 = data.getBigUint64(18, true)
+    ? 'guest' + data.getBigUint64(18, true).toString()
+    : '';
+
+  setResponse(() => ({
+    packetId: id,
+    data: { roomNumber, limitTime, player1, player2 },
+  }));
+}
+
 export function exitRoomHandler({
   packet: { option, router },
   setResponse,
