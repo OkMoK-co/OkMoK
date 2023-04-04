@@ -22,10 +22,10 @@ class Room
         void leaveUser(User *user);
 
     private:
-        Poco::UInt32 _roomIndex;
-        Poco::UInt32 _roomNumber;
-        Poco::Int8 _limitTime;
-        Poco::Int32 _maxUserCount;
+        Poco::Int32 _roomIndex;
+        Poco::Int32 _roomNumber;
+        Poco::UInt8 _limitTime;
+        Poco::UInt32 _maxUserCount;
         Poco::UInt32 _currentUserCount;
         std::list<User*> _users;
 };
