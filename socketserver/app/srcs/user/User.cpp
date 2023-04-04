@@ -25,6 +25,16 @@ Poco::Int32 User::getRoomIndex()
 		return _roomIndex;
 }
 
+Poco::Int32 User::getGameIndex()
+{
+    return _gameIndex;
+}
+
+void User::setGameIndex(Poco::Int32 gameIndex)
+{
+    _gameIndex = gameIndex;
+}
+
 void User::enterRoom(Poco::Int32 roomIndex)
 {
     _roomIndex = roomIndex;
@@ -46,5 +56,6 @@ void User::logout()
     _index = -1;
     _userId = 0;
     _roomIndex = -1;
+    _gameIndex = -1;
 }
 
