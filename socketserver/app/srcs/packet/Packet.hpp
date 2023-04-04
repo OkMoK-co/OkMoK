@@ -27,16 +27,16 @@ struct PACKET_HEADER
 
 struct LOGIN_RESPONSE_PACKET : public PACKET_HEADER
 {
-	Poco::UInt64 userId = 0;
+	Poco::Int64 userId;
 };
 
 struct ROOM
 {
-	Poco::UInt32 roomNumber = 0;
-	Poco::UInt8 limitTime = 0;
-	Poco::UInt8 isFull = 0;
-	Poco::UInt64 player1 = 0;
-	Poco::UInt64 player2 = 0;
+	Poco::Int32 roomNumber;
+	Poco::UInt8 limitTime;
+	Poco::UInt8 isFull;
+	Poco::UInt64 player1;
+	Poco::UInt64 player2;
 };
 
 struct ROOM_MAIN_RESPONSE_PACKET : public PACKET_HEADER
@@ -55,17 +55,22 @@ struct ROOM_CREATE_RESPONSE_PACKET : public PACKET_HEADER
 	
 };
 
-struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
+struct ROOM_ENTER_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
+};
+
+struct ROOM_ENTER_REQUEST_PACKET
+{
+	Poco::Int32 roomNumber;
 };
 
 struct ROOM_INFO
 {
-	Poco::UInt32 roomNumber = 0;
-	Poco::UInt8 limitTime = 0;
-	Poco::UInt64 player1 = 0;
-	Poco::UInt64 player2 = 0;
+	Poco::Int32 roomNumber;
+	Poco::UInt8 limitTime;
+	Poco::UInt64 player1;
+	Poco::UInt64 player2;
 };
 
 struct ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
@@ -76,6 +81,11 @@ struct ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
 struct R_ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
 {
 	struct ROOM_INFO roomInfo;
+};
+
+struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
+{
+	
 };
 
 struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 

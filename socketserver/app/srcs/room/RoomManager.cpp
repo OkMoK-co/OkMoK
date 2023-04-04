@@ -33,6 +33,11 @@ void RoomManager::init(Poco::UInt32 maxRoomCount, Poco::UInt32 maxUserCount)
 	}
 }
 
+Room *RoomManager::takeRoomByRoomIndex(Poco::Int32 roomIndex)
+{
+	return _roomPool[roomIndex];
+}
+
 Poco::Int32 RoomManager::takeInactiveRoomIndex()
 {
 	std::set<Poco::Int32>::iterator it = _inactiveRoomIndexes.begin();
@@ -59,6 +64,29 @@ void RoomManager::deleteRoom(Poco::Int32 roomIndex)
 	_enterableRooms.erase(roomIndex);
 	_activeRooms.remove(_roomPool[roomIndex]);
 	_inactiveRoomIndexes.insert(roomIndex);
+}
+
+PACKET_ERROR_CODE RoomManager::enterRoom(Poco::Int32 roomIndex, User *user)
+{
+	if (user->getRoomIndex() > -1)
+	{
+		return PACKET_ERROR_CODE::ROOM_ERROR;
+	}
+	if (roomIndex < 0 || roomIndex > _maxRoomCount)
+	{
+		return PACKET_ERROR_CODE::ROOM_ERROR;
+	}
+	
+	Room *room = _roomPool[roomIndex];
+	if (room->getCurrentUserCount() == 0 || !(room->getCurrentUserCount() < room->getMaxUserCount()))
+	{
+		return PACKET_ERROR_CODE::ROOM_ERROR;
+	}
+
+	_enterableRooms.erase(roomIndex);
+	room->enterUser(user);
+
+	return PACKET_ERROR_CODE::NONE;
 }
 
 void RoomManager::exitRoom(Poco::Int32 roomIndex, User *user)

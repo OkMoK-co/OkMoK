@@ -6,9 +6,9 @@ import { socketVar } from '@/socket/variable';
 export default function PlayButton() {
   const socket = useRecoilValue(socketState);
 
-  const enterRoomHandler = () => {
+  const createRoomHandler = () => {
     socket?.send(requestHandler({ id: socketVar.ROOM_CREATE_REQUEST }));
   };
 
-  return <button onClick={enterRoomHandler}>🚀 PLAY</button>;
+  return <button onClick={createRoomHandler}>🚀 PLAY</button>;
 }
