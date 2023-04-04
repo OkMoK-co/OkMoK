@@ -1,9 +1,9 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 import type { NextPageWithLayout } from '@/pages/_app';
-import { roomInfoState, socketState, userState } from '@/utils/recoil/socket';
-import { requestHandler } from '@/socket/requestHandler';
+import { roomInfoState, userState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
+import useEnterPage from '@/hooks/useEnterPage';
 import GameLayout from '@/components/layout/GameLayout';
 import GiveupButton from '@/components/game/GiveupButton';
 import Players from '@/components/game/Players';
@@ -12,13 +12,10 @@ import KickoutButton from '@/components/game/KickoutButton';
 import styled from 'styled-components';
 
 const Game: NextPageWithLayout = () => {
-  const socket = useRecoilValue(socketState);
   const user = useRecoilValue(userState);
   const { roomNumber } = useRecoilValue(roomInfoState);
 
-  useEffect(() => {
-    socket?.send(requestHandler({ id: socketVar.ROOM_INFO_REQUEST }));
-  }, []);
+  useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
 
   return (
     <main>
