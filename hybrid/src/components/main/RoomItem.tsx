@@ -1,3 +1,7 @@
+import { useRecoilValue } from 'recoil';
+import { socketState } from '@/utils/recoil/socket';
+import { requestHandler } from '@/socket/requestHandler';
+import { socketVar } from '@/socket/variable';
 import { ImHome3, ImEnter } from 'react-icons/im';
 
 interface RoomItemProps {
@@ -11,8 +15,18 @@ export default function RoomItem({
   limitTime,
   players,
 }: RoomItemProps) {
+  const socket = useRecoilValue(socketState);
+
+  const enterRoomHandler = () => {
+    const id = socketVar.ROOM_ENTER_REQUEST;
+    const body = new ArrayBuffer(4);
+    const data = new DataView(body);
+    data.setInt32(0, roomNumber, true);
+    socket?.send(requestHandler({ id, body }));
+  };
+
   return (
-    <div>
+    <div onClick={enterRoomHandler}>
       <div>
         <ImHome3 />
         {roomNumber}

@@ -59,6 +59,18 @@ export function createRoomHandler({
   router.push('/game');
 }
 
+export function enterRoomHandler({
+  packet: { option, router },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to Enter room');
+    return;
+  }
+
+  router.push('/game');
+}
+
 export function infoRoomHandler({
   packet: { data, id, option },
   setResponse,

@@ -160,7 +160,34 @@ void PacketManager::broadcastInfoRoom(Poco::Int32 roomIndex)
 
 void PacketManager::processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	
+	ROOM_ENTER_RESPONSE_PACKET packet = makePacketHeader<ROOM_ENTER_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_ENTER_RESPONSE);
+	Poco::Int32 roomNumber = (reinterpret_cast<ROOM_ENTER_REQUEST_PACKET *>(pBodyData))->roomNumber;
+
+	std::map<Poco::Int32, Room*> enterableRooms = _roomManager.getEnterableRooms();
+	std::map<Poco::Int32, Room*>::iterator it = enterableRooms.find(roomNumber - 1);
+	if (it == _roomManager.getEnterableRooms().end())
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	Room *room = it->second;
+	if (!(room->getCurrentUserCount() < room->getMaxUserCount()))
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	enterableRooms.erase(it);
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	_userManager.deleteMainUsers(user);
+	room->enterUser(user);
+
+	broadcastMainRooms();
+	broadcastInfoRoom(room->getRoomIndex());
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
 void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
