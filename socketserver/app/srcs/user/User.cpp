@@ -15,7 +15,7 @@ Poco::Int32 User::getIndex()
     return _index;
 }
 
-Poco::UInt64 User::getUserId() 
+Poco::Int64 User::getUserId() 
 {
     return _userId;
 }

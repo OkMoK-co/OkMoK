@@ -12,12 +12,12 @@ class GameManager
 {
 	public:
 		void init(Poco::Int32 maxGameCount);
-		void createGame(Poco::UInt32 gameIndex, User *player1, User *player2);
-		PACKET_ERROR_CODE putOkmok(User *user, Poco::UInt8 x, Poco::UInt8 y, Poco::UInt64 time);
+		void createGame(Poco::Int32 gameIndex, User *player1, User *player2);
+		PACKET_ERROR_CODE putOkmok(User *user, Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time);
 
 	private:
 		Poco::Int32 _maxGameCount;
 		std::vector<Game *> _gamePool;
-		Poco::UInt64 _currentGameNumber;
+		Poco::Int32 _currentGameId;
 };
 

@@ -85,8 +85,8 @@ struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER
 
 struct GAME_PUT_REQUEST_PACKET
 {
-	Poco::UInt8 x;
-	Poco::UInt8 y;
+	Poco::Int8 x;
+	Poco::Int8 y;
 	Poco::UInt64 time;
 };
 

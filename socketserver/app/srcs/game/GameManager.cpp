@@ -3,7 +3,7 @@
 void GameManager::init(Poco::Int32 maxGameCount)
 {
 	_maxGameCount = maxGameCount;
-	_currentGameNumber = 0;
+	_currentGameId = 0;
 	_gamePool = std::vector<Game *>(maxGameCount);
 	for (int i = 0; i < maxGameCount; ++i)
 	{
@@ -11,13 +11,13 @@ void GameManager::init(Poco::Int32 maxGameCount)
 	}
 }
 
-void GameManager::createGame(Poco::UInt32 gameIndex, User *player1, User *player2)
+void GameManager::createGame(Poco::Int32 gameIndex, User *player1, User *player2)
 {
-	_currentGameNumber += 1;
-	_gamePool[gameIndex]->startGame(_currentGameNumber, player1, player2);
+	_currentGameId += 1;
+	_gamePool[gameIndex]->startGame(_currentGameId, player1, player2);
 }
 
-PACKET_ERROR_CODE GameManager::putOkmok(User* player, Poco::UInt8 x, Poco::UInt8 y, Poco::UInt64 time)
+PACKET_ERROR_CODE GameManager::putOkmok(User* player, Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time)
 {
 	Game *game;
 	Poco::Int32 gameIndex = player->getGameIndex();

@@ -1,13 +1,13 @@
 #include "Game.hpp"
 
-
-Game::Game(Poco::UInt32 gameIndex, Poco::UInt8 limitTime)
+Game::Game(Poco::Int32 gameIndex, Poco::UInt8 limitTime)
 {
 	_gameIndex = gameIndex;
-	_gameNumber = 0;
+	_gameId = 0;
 	_limitTime = limitTime;
 	_player1 = NULL;
 	_player2 = NULL;
+	memset(_gameBoard, 0, 15 * 15);
 }
 
 Game::~Game()
@@ -15,9 +15,9 @@ Game::~Game()
 	
 }
 
-void Game::startGame(Poco::UInt64 gameNumber, User *player1, User *player2)
+void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 {
-	_gameNumber = gameNumber;
+	_gameId = gameId;
 	_player1 = player1;
 	_player2 = player2;
 	_player1->setGameIndex(_gameIndex);
@@ -27,7 +27,7 @@ void Game::startGame(Poco::UInt64 gameNumber, User *player1, User *player2)
 
 void Game::endGame()
 {
-	_gameNumber = 0;
+	_gameId = 0;
 	_player1->setGameIndex(-1);
 	_player2->setGameIndex(-1);
 	_player1 = NULL;
@@ -58,7 +58,7 @@ bool Game::isCurrentPlayer(User *player)
 	return false;
 }
 
-bool Game::isValidPut(Poco::UInt8 x, Poco::UInt8 y)
+bool Game::isValidPut(Poco::Int8 x, Poco::Int8 y)
 {
 	if (x > 14 || y > 14 || x < 0 || y < 0)
 	{

@@ -69,9 +69,9 @@ void PacketManager::processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::I
 
 template <typename T>
 void PacketManager::makeMainRooms(T &packet) {
-	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
+	std::map<Poco::Int32, Room*> enterableRooms = _roomManager.getEnterableRooms();
 
-	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
+	std::map<Poco::Int32, Room*>::iterator it = enterableRooms.begin();
 	int size = std::min(10, (int)enterableRooms.size());
 	for (int i = 0; i < size; ++i, ++it)
 	{
@@ -122,7 +122,7 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 	}
 	
 	User *user = _userManager.takeUserByConnIndex(connIndex);
-	_roomManager.createRoom((Poco::UInt32)roomIndex, user);
+	_roomManager.createRoom((Poco::Int32)roomIndex, user);
 	_userManager.deleteMainUsers(user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 	broadcastMainRooms();
@@ -193,7 +193,7 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 		return ;
 	}
 
-	_roomManager.exitRoom((Poco::UInt32)roomIndex, user);
+	_roomManager.exitRoom((Poco::Int32)roomIndex, user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	broadcastMainRooms();
