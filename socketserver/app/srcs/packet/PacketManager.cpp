@@ -131,7 +131,7 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 template <typename T>
 void PacketManager::makeInfoRoom(T &packet, Poco::Int32 roomIndex)
 {
-	Room *room = _roomManager.getRoomPool()[roomIndex];
+	Room *room = _roomManager.takeRoomByRoomIndex(roomIndex);
 
 	packet.roomInfo.roomNumber = room->getRoomNumber();
 	packet.roomInfo.limitTime = room->getLimitTime();
@@ -141,7 +141,7 @@ void PacketManager::makeInfoRoom(T &packet, Poco::Int32 roomIndex)
 
 void PacketManager::broadcastInfoRoom(Poco::Int32 roomIndex)
 {
-	Room *room = _roomManager.getRoomPool()[roomIndex];
+	Room *room = _roomManager.takeRoomByRoomIndex(roomIndex);
 	if (room->getCurrentUserCount() == 0) 
 	{
 		return ;
@@ -161,32 +161,22 @@ void PacketManager::broadcastInfoRoom(Poco::Int32 roomIndex)
 void PacketManager::processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_ENTER_RESPONSE_PACKET packet = makePacketHeader<ROOM_ENTER_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_ENTER_RESPONSE);
-	Poco::Int32 roomNumber = (reinterpret_cast<ROOM_ENTER_REQUEST_PACKET *>(pBodyData))->roomNumber;
+	Poco::Int32 roomIndex = (reinterpret_cast<ROOM_ENTER_REQUEST_PACKET *>(pBodyData))->roomNumber - 1;
 
-	std::map<Poco::Int32, Room*> enterableRooms = _roomManager.getEnterableRooms();
-	std::map<Poco::Int32, Room*>::iterator it = enterableRooms.find(roomNumber - 1);
-	if (it == _roomManager.getEnterableRooms().end())
-	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
-		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-		return ;
-	}
-
-	Room *room = it->second;
-	if (!(room->getCurrentUserCount() < room->getMaxUserCount()))
-	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
-		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-		return ;
-	}
-
-	enterableRooms.erase(it);
 	User *user = _userManager.takeUserByConnIndex(connIndex);
+	PACKET_ERROR_CODE code = _roomManager.enterRoom(roomIndex, user);
+	if (code != PACKET_ERROR_CODE::NONE)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
 	_userManager.deleteMainUsers(user);
-	room->enterUser(user);
 
 	broadcastMainRooms();
-	broadcastInfoRoom(room->getRoomIndex());
+	broadcastInfoRoom(roomIndex);
+
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
