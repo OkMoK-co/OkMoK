@@ -8,6 +8,7 @@
 enum class PACKET_ERROR_CODE : short
 {
 	NONE = 0,
+	GAME_PUT_ERROR = 1,
 };
 
 enum class PACKET_OPTION : Poco::UInt8

@@ -9,6 +9,7 @@ void PacketManager::init(const int maxSessionCount)
 {
 	_roomManager.init(maxSessionCount, 2);
 	_userManager.init(maxSessionCount);
+	_gameManager.init(maxSessionCount);
 
 	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
 	_recvFuntionDictionary[(int)PACKET_ID::DEV_ECHO] = &PacketManager::processDevEcho;
@@ -68,9 +69,9 @@ void PacketManager::processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::I
 
 template <typename T>
 void PacketManager::makeMainRooms(T &packet) {
-	std::map<Poco::UInt32, Room*> enterableRooms = _roomManager.getEnterableRooms();
+	std::map<Poco::Int32, Room*> enterableRooms = _roomManager.getEnterableRooms();
 
-	std::map<Poco::UInt32, Room*>::iterator it = enterableRooms.begin();
+	std::map<Poco::Int32, Room*>::iterator it = enterableRooms.begin();
 	int size = std::min(10, (int)enterableRooms.size());
 	for (int i = 0; i < size; ++i, ++it)
 	{
@@ -121,10 +122,9 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 	}
 	
 	User *user = _userManager.takeUserByConnIndex(connIndex);
-	_roomManager.createRoom((Poco::UInt32)roomIndex, user);
+	_roomManager.createRoom((Poco::Int32)roomIndex, user);
 	_userManager.deleteMainUsers(user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-	
 	broadcastMainRooms();
 }
 
@@ -193,7 +193,7 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 		return ;
 	}
 
-	_roomManager.exitRoom((Poco::UInt32)roomIndex, user);
+	_roomManager.exitRoom((Poco::Int32)roomIndex, user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	broadcastMainRooms();
@@ -203,5 +203,16 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	GAME_PUT_RESONSE_PACKET packet = makePacketHeader<GAME_PUT_RESONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
+	GAME_PUT_REQUEST_PACKET *put = reinterpret_cast<GAME_PUT_REQUEST_PACKET *> (pBodyData);
+
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	PACKET_ERROR_CODE code = _gameManager.putOkmok(user, put->x, put->y, put->time);
+	if (code != PACKET_ERROR_CODE::NONE)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+	/** 추후 x, y, p 보내기 */
 }

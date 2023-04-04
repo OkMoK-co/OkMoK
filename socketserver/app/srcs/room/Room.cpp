@@ -5,7 +5,7 @@ Room::Room()
 
 }
 
-Room::Room(Poco::UInt32 roomIndex, Poco::UInt32 maxUserCount)
+Room::Room(Poco::Int32 roomIndex, Poco::UInt32 maxUserCount)
 {
     _roomIndex = roomIndex;
     _roomNumber = _roomIndex + 1;
@@ -19,12 +19,12 @@ Room::~Room()
 
 }
 
-Poco::UInt32 Room::getRoomIndex()
+Poco::Int32 Room::getRoomIndex()
 {
     return _roomIndex;
 }
 
-Poco::UInt32 Room::getRoomNumber()
+Poco::Int32 Room::getRoomNumber()
 {
     return _roomNumber;
 }

@@ -3,6 +3,7 @@
 #include <functional>
 #include "../room/RoomManager.hpp"
 #include "../user/UserManager.hpp"
+#include "../game/GameManager.hpp"
 
 /**
  * @brief 패킷을 관리하는 매니저 클래스입니다.
@@ -47,5 +48,6 @@ class PacketManager
 		std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION> _recvFuntionDictionary;
 		RoomManager _roomManager;
 		UserManager _userManager;
+		GameManager _gameManager;
 };
 

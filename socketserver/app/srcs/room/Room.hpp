@@ -8,11 +8,11 @@ class Room
 {
     public:
         Room();
-        Room(Poco::UInt32 roomIndex, Poco::UInt32 maxUserCount);
+        Room(Poco::Int32 roomIndex, Poco::UInt32 maxUserCount);
         ~Room();
 
-        Poco::UInt32 getRoomIndex();
-        Poco::UInt32 getRoomNumber();
+        Poco::Int32 getRoomIndex();
+        Poco::Int32 getRoomNumber();
         Poco::UInt8 getLimitTime();
         Poco::UInt32 getMaxUserCount();
         Poco::UInt32 getCurrentUserCount();
@@ -22,8 +22,8 @@ class Room
         void leaveUser(User *user);
 
     private:
-        Poco::UInt32 _roomIndex;
-        Poco::UInt32 _roomNumber;
+        Poco::Int32 _roomIndex;
+        Poco::Int32 _roomNumber;
         Poco::UInt8 _limitTime;
         Poco::UInt32 _maxUserCount;
         Poco::UInt32 _currentUserCount;
