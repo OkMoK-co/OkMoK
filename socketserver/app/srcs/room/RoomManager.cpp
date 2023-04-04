@@ -68,6 +68,10 @@ void RoomManager::deleteRoom(Poco::Int32 roomIndex)
 
 PACKET_ERROR_CODE RoomManager::enterRoom(Poco::Int32 roomIndex, User *user)
 {
+	if (user->getRoomIndex() > -1)
+	{
+		return PACKET_ERROR_CODE::ROOM_ERROR;
+	}
 	if (roomIndex < 0 || roomIndex > _maxRoomCount)
 	{
 		return PACKET_ERROR_CODE::ROOM_ERROR;
