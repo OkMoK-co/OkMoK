@@ -228,7 +228,7 @@ void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, Poco::Int32 
 
 void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	GAME_PUT_RESONSE_PACKET packet = makePacketHeader<GAME_PUT_RESONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
+	GAME_PUT_RESPONSE_PACKET packet = makePacketHeader<GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
 	GAME_PUT_REQUEST_PACKET *put = reinterpret_cast<GAME_PUT_REQUEST_PACKET *>(pBodyData);
 
 	User *user = _userManager.takeUserByConnIndex(connIndex);

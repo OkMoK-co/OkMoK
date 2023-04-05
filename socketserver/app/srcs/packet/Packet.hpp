@@ -88,7 +88,7 @@ struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
 	
 };
 
-struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 
+struct GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
 {
 
 };
@@ -98,11 +98,6 @@ struct GAME_PUT_REQUEST_PACKET
 	Poco::Int8 x;
 	Poco::Int8 y;
 	Poco::UInt64 time;
-};
-
-struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 
-{
-
 };
 
 struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
