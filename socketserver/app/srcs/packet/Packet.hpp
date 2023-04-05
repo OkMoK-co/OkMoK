@@ -100,4 +100,17 @@ struct GAME_PUT_REQUEST_PACKET
 	Poco::UInt64 time;
 };
 
+struct GAME_PUT_RESONSE_PACKET : public PACKET_HEADER 
+{
+
+};
+
+struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
+{
+	Poco::Int8 x;
+	Poco::Int8 y;
+	Poco::Int8 player;
+	Poco::UInt64 time;
+};
+
 #pragma pack(pop)

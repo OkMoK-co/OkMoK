@@ -12,6 +12,8 @@ class Game
 		Game(Poco::Int32 gameIndex, Poco::UInt8 limitTime);
 		~Game();
 
+		PutInfo getPutsBack();
+
 		void startGame(Poco::Int32 gameId, User *player1, User *player2);
 		void endGame();
 		void addPut(Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time);

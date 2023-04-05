@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { user, rooms, roomInfo } from '@/utils/type/socketType';
+import { user, rooms, roomInfo, putInfo } from '@/utils/type/socketType';
 import { socketVar } from '@/socket/variable';
 
 export const socketState = atom<WebSocket | null>({
@@ -24,6 +24,9 @@ export const responseState = selector<any>({
       case socketVar.R_ROOM_INFO_RESPONSE:
         set(roomInfoState, newValue.data);
         break;
+      case socketVar.R_GAME_PUT_RESPONSE:
+        set(putInfoState, newValue.data);
+        break;
     }
   },
 });
@@ -42,4 +45,14 @@ export const roomsState = atom<rooms>({
 export const roomInfoState = atom<roomInfo>({
   key: 'roomInfoState',
   default: { roomNumber: 0, limitTime: 0, player1: '', player2: '' },
+});
+
+export const putInfoState = atom<putInfo>({
+  key: 'putInfoState',
+  default: {
+    x: -1,
+    y: -1,
+    player: 0,
+    time: BigInt(0),
+  },
 });
