@@ -6,7 +6,8 @@ import {
   enterRoomHandler,
   infoRoomHandler,
   exitRoomHandler,
-  receivePutHandler,
+  putHandler,
+  recievePutHandler,
 } from './responseHandler';
 import { routeResponseProps } from '@/utils/type/socketType';
 
@@ -23,5 +24,6 @@ export const routeResponse: {
   [socketVar.R_ROOM_INFO_RESPONSE]: infoRoomHandler,
   [socketVar.ROOM_EXIT_RESPONSE]: exitRoomHandler,
 
-  [socketVar.GAME_PUT_RESPONSE]: receivePutHandler,
+  [socketVar.GAME_PUT_RESPONSE]: putHandler,
+  [socketVar.R_GAME_PUT_RESPONSE]: recievePutHandler,
 };

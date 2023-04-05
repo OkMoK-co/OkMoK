@@ -1,5 +1,10 @@
 #include "GameManager.hpp"
 
+std::vector<Game *> GameManager::getGamePool()
+{
+	return _gamePool;
+}
+
 void GameManager::init(Poco::Int32 maxGameCount)
 {
 	_maxGameCount = maxGameCount;

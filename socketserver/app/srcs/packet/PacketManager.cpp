@@ -217,10 +217,19 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 	broadcastInfoRoom(roomIndex);
 }
 
+void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, Poco::Int32 gameIndex)
+{
+	PutInfo put = _gameManager.getGamePool()[gameIndex]->getPutsBack();
+	packet.x = put.x;
+	packet.y = put.y;
+	packet.player = put.player;
+	packet.time = put.time;
+}
+
 void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
-	GAME_PUT_RESONSE_PACKET packet = makePacketHeader<GAME_PUT_RESONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
-	GAME_PUT_REQUEST_PACKET *put = reinterpret_cast<GAME_PUT_REQUEST_PACKET *> (pBodyData);
+	GAME_PUT_RESPONSE_PACKET packet = makePacketHeader<GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
+	GAME_PUT_REQUEST_PACKET *put = reinterpret_cast<GAME_PUT_REQUEST_PACKET *>(pBodyData);
 
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 	PACKET_ERROR_CODE code = _gameManager.putOkmok(user, put->x, put->y, put->time);
@@ -231,5 +240,10 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 		return ;
 	}
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-	/** 추후 x, y, p 보내기 */
+	
+	R_GAME_PUT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_PUT_RESPONSE);
+	makePutGame(broadcastPacket, user->getGameIndex());
+
+	/**추후 방 전체 유저에게 전송*/
+	sendPacketFunc(connIndex, (char *)&broadcastPacket, broadcastPacket.packetSize);
 }

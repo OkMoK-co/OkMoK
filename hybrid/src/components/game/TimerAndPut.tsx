@@ -12,13 +12,13 @@ export default function TimerAndPut({ point }: timerAndPutProps) {
   const { limitTime } = useRecoilValue(roomInfoState);
   const socket = useRecoilValue(socketState);
   const putHandler = () => {
-    const id = socketVar.GAME_PUT_REQUEST;
+    const [x, y] = point;
     const body = new ArrayBuffer(10);
     const data = new DataView(body);
-    data.setUint8(0, point[0]);
-    data.setUint8(1, point[1]);
-    data.setBigUint64(2, BigInt(0));
-    socket?.send(requestHandler({ id, body }));
+    data.setInt8(0, x);
+    data.setInt8(1, y);
+    data.setBigUint64(2, BigInt(0), true);
+    socket?.send(requestHandler({ id: socketVar.GAME_PUT_REQUEST, body }));
   };
 
   return (

@@ -1,4 +1,4 @@
-import { routeResponseProps, room } from '@/utils/type/socketType';
+import { routeResponseProps, room, putInfo } from '@/utils/type/socketType';
 
 export function loginHandler({
   packet: { data, id, option },
@@ -106,7 +106,7 @@ export function exitRoomHandler({
 }
 
 /** game 관련 */
-export function receivePutHandler({
+export function putHandler({
   packet: { data, id, option },
   setResponse,
 }: routeResponseProps) {
@@ -114,4 +114,23 @@ export function receivePutHandler({
     alert('Failed to put');
     return;
   }
+}
+
+export function recievePutHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to recieve put');
+  }
+  const putInfo: putInfo = {
+    x: data.getInt8(5),
+    y: data.getInt8(6),
+    player: data.getInt8(7),
+    time: data.getBigUint64(8, true),
+  };
+  setResponse(() => ({
+    packetId: id,
+    data: putInfo,
+  }));
 }

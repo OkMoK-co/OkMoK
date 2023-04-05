@@ -15,6 +15,11 @@ Game::~Game()
 	
 }
 
+PutInfo Game::getPutsBack()
+{
+	return _puts.back();
+}
+
 void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 {
 	_gameId = gameId;
