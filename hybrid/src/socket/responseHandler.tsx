@@ -170,9 +170,15 @@ export function recievePutHandler({
     packetId: id,
     data: putInfo,
   }));
-  if (putInfo.result)
-    setResponse(() => ({
-      packetId: socketVar.R_GAME_RESULT_RESPONSE,
-      data: { startTime: BigInt(0), winner: putInfo.player },
-    }));
+}
+
+export function resultGameHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  const winner = data.getInt8(5);
+  setResponse(() => ({
+    packetId: id,
+    data: { startTime: BigInt(0), winner },
+  }));
 }
