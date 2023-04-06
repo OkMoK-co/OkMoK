@@ -14,9 +14,8 @@ import styled from 'styled-components';
 
 const Game: NextPageWithLayout = () => {
   const { nickname } = useRecoilValue(userState);
-  const { roomNumber, player1, player2 } = useRecoilValue(roomInfoState);
+  const { roomNumber, player1 } = useRecoilValue(roomInfoState);
   const { startTime } = useRecoilValue(gameInfoState);
-  const playerIsFull = player1 && player2;
 
   useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
 
@@ -24,10 +23,13 @@ const Game: NextPageWithLayout = () => {
     <main>
       <GameTopWrap>
         <div>Room: [ {roomNumber} ]</div>
-        <GiveupButton />
-        {nickname === player1 && <KickoutButton />}
+        {startTime ? (
+          <GiveupButton />
+        ) : (
+          nickname === player1 && <KickoutButton />
+        )}
       </GameTopWrap>
-      {playerIsFull && !startTime && <ReadyButton />}
+      {!startTime && <ReadyButton />}
       <OmokBoard />
       <Players />
     </main>

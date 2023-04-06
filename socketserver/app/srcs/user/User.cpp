@@ -62,9 +62,13 @@ void User::login(Poco::UInt32 connectIndex)
 void User::ready()
 {
 	if (_ready == 0)
+	{
 		_ready = 1;
+	}
 	else
+	{
 		_ready = 0;
+	}
 }
 
 void User::logout()
