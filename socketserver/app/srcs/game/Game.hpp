@@ -2,6 +2,8 @@
 
 #include <Poco/Types.h>
 #include <list>
+#include <ctime>
+#include "Okmok.hpp"
 #include "../user/User.hpp"
 
 struct PutInfo;
@@ -13,17 +15,20 @@ class Game
 		~Game();
 
 		PutInfo getPutsBack();
+		Poco::UInt64 getStartTime();
 
 		void startGame(Poco::Int32 gameId, User *player1, User *player2);
 		void endGame();
 		void addPut(Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time);
 		bool isCurrentPlayer(User *player);
 		bool isValidPut(Poco::Int8 x, Poco::Int8 y);
+		bool checkVictory();
 
 	private:
 		Poco::Int32 _gameIndex;
 		Poco::Int32 _gameId;
 		Poco::UInt8 _limitTime;
+		Poco::UInt64 _startTime;
 		User *_player1;
 		User *_player2;
 		Poco::UInt8 _currentPlayer;

@@ -49,7 +49,7 @@ export interface roomInfo {
 
 export interface gameInfo {
   startTime: BigInt;
-  winner: string;
+  winner: number;
 }
 
 export interface putInfo {

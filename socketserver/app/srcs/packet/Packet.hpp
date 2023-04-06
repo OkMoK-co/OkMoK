@@ -118,4 +118,9 @@ struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER
 	Poco::UInt64 time;
 };
 
+struct R_GAME_RESULT_RESPONSE_PACKET : public PACKET_HEADER 
+{
+	Poco::Int8 result;
+};
+
 #pragma pack(pop)

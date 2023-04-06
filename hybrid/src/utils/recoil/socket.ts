@@ -61,7 +61,7 @@ export const gameInfoState = atom<gameInfo>({
   key: 'gameInfoState',
   default: {
     startTime: BigInt(0),
-    winner: '',
+    winner: 0,
   },
 });
 

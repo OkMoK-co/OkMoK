@@ -1,4 +1,5 @@
 import { routeResponseProps, room, putInfo } from '@/utils/type/socketType';
+import { socketVar } from './variable';
 
 export function loginHandler({
   packet: { data, id, option },
@@ -137,7 +138,7 @@ export function startGameHandler({
 
   setResponse(() => ({
     packetId: id,
-    data: { startTime, winner: '' },
+    data: { startTime, winner: 0 },
   }));
 }
 
@@ -174,8 +175,7 @@ export function resultGameHandler({
   packet: { data, id, option },
   setResponse,
 }: routeResponseProps) {
-  const winner = 'guest' + data.getBigUint64(5, true).toString();
-
+  const winner = data.getInt8(5);
   setResponse(() => ({
     packetId: id,
     data: { startTime: BigInt(0), winner },
