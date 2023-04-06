@@ -160,11 +160,10 @@ export function recievePutHandler({
     alert('Failed to recieve put');
   }
   const putInfo: putInfo = {
-    result: data.getInt8(5),
-    x: data.getInt8(6),
-    y: data.getInt8(7),
-    player: data.getInt8(8),
-    time: data.getBigUint64(9, true),
+    x: data.getInt8(5),
+    y: data.getInt8(6),
+    player: data.getInt8(7),
+    time: data.getBigUint64(8, true),
   };
   setResponse(() => ({
     packetId: id,

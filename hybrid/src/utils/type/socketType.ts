@@ -53,7 +53,6 @@ export interface gameInfo {
 }
 
 export interface putInfo {
-  result: number;
   x: number;
   y: number;
   player: number;

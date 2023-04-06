@@ -68,7 +68,6 @@ export const gameInfoState = atom<gameInfo>({
 export const putInfoState = atom<putInfo>({
   key: 'putInfoState',
   default: {
-    result: 0,
     x: -1,
     y: -1,
     player: 0,

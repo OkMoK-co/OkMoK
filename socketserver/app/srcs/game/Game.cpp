@@ -20,6 +20,11 @@ PutInfo Game::getPutsBack()
 	return _puts.back();
 }
 
+Poco::UInt64 Game::getStartTime()
+{
+	return _startTime;
+}
+
 void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 {
 	_gameId = gameId;
@@ -28,6 +33,7 @@ void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 	_player1->setGameIndex(_gameIndex);
 	_player2->setGameIndex(_gameIndex);
 	_currentPlayer = 1;
+	_startTime = static_cast<Poco::UInt64>(std::time(NULL));
 }
 
 void Game::endGame()

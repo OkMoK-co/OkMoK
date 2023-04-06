@@ -253,11 +253,10 @@ void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, P
 
 void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put, Poco::Int8 result)
 {
-	packet.result = result;
 	packet.x = put.x;
 	packet.y = put.y;
 	packet.player = put.player;
-	packet.time = put.time;
+	packet.time = result ? 0 : put.time;
 }
 
 void PacketManager::makeGameResult(R_GAME_RESULT_RESPONSE_PACKET &packet, Poco::Int8 result)

@@ -2,6 +2,7 @@
 
 #include <Poco/Types.h>
 #include <list>
+#include <ctime>
 #include "Okmok.hpp"
 #include "../user/User.hpp"
 
@@ -14,6 +15,7 @@ class Game
 		~Game();
 
 		PutInfo getPutsBack();
+		Poco::UInt64 getStartTime();
 
 		void startGame(Poco::Int32 gameId, User *player1, User *player2);
 		void endGame();
@@ -26,6 +28,7 @@ class Game
 		Poco::Int32 _gameIndex;
 		Poco::Int32 _gameId;
 		Poco::UInt8 _limitTime;
+		Poco::UInt64 _startTime;
 		User *_player1;
 		User *_player2;
 		Poco::UInt8 _currentPlayer;

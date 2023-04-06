@@ -112,7 +112,6 @@ struct GAME_PUT_REQUEST_PACKET
 
 struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
 {
-	Poco::Int8 result;
 	Poco::Int8 x;
 	Poco::Int8 y;
 	Poco::Int8 player;

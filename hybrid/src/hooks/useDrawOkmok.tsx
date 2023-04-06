@@ -82,7 +82,7 @@ export default function useDrawOkmok() {
   };
 
   useEffect(() => {
-    const { result, x, y, player } = putInfo;
+    const { x, y, player } = putInfo;
     const color = player === 1 ? '#00ff00' : '#ff00ff';
     drawOkmok(x, y, color);
     if (x > -1 && y > -1) {
@@ -91,9 +91,6 @@ export default function useDrawOkmok() {
         newBoard[y][x] = player;
         return newBoard;
       });
-    }
-    if (result) {
-      console.log(`player ${result} win!!`);
     }
   }, [putInfo]);
 
