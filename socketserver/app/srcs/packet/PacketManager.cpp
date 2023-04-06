@@ -20,6 +20,7 @@ void PacketManager::init(const int maxSessionCount)
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_ENTER_REQUEST] = &PacketManager::processEnterRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_INFO_REQUEST] = &PacketManager::processInfoRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_EXIT_REQUEST] = &PacketManager::processExitRoom;
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_KICKOUT_REQUEST] = &PacketManager::processKickoutUser;
 
 	_recvFuntionDictionary[(int)PACKET_ID::GAME_PUT_REQUEST] = &PacketManager::processPutGame;
 
@@ -211,6 +212,39 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 	}
 
 	_roomManager.exitRoom((Poco::Int32)roomIndex, user);
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+
+	broadcastMainRooms();
+	broadcastInfoRoom(roomIndex);
+}
+
+void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	ROOM_KICKOUT_RESPONSE_PACKET packet = makePacketHeader<ROOM_KICKOUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_KICKOUT_RESPONSE);
+	
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	Poco::Int32 roomIndex = user->getRoomIndex();
+	if(roomIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	std::list<User*> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
+	if (users.front() != user || users.size() != 2)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	R_ROOM_EXIT_RESPONSE_PACKET kickedoutpacket = makePacketHeader<R_ROOM_EXIT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_ROOM_EXIT_RESPONSE);
+
+	User *kickedoutUser = users.back();
+	_roomManager.exitRoom((Poco::Int32)roomIndex, kickedoutUser);
+	sendPacketFunc(kickedoutUser->getIndex(), (char *)&kickedoutpacket, kickedoutpacket.packetSize);
+
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	broadcastMainRooms();

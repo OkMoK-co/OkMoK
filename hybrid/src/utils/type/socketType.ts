@@ -19,7 +19,12 @@ export interface requestType {
 
 export interface responseType {
   packetId: number;
-  data: rooms | roomInfo | user | putInfo | null;
+  data: rooms | roomInfo | user | gameInfo | putInfo | null;
+}
+
+export interface user {
+  id: bigint;
+  nickname: string;
 }
 
 export interface room {
@@ -42,8 +47,9 @@ export interface roomInfo {
   player2: string;
 }
 
-export interface user {
-  id: bigint;
+export interface gameInfo {
+  startTime: BigInt;
+  winner: string;
 }
 
 export interface putInfo {

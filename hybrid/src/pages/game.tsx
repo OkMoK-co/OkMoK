@@ -12,8 +12,8 @@ import KickoutButton from '@/components/game/KickoutButton';
 import styled from 'styled-components';
 
 const Game: NextPageWithLayout = () => {
-  const user = useRecoilValue(userState);
-  const { roomNumber } = useRecoilValue(roomInfoState);
+  const nickname = useRecoilValue(userState).nickname;
+  const { roomNumber, player1 } = useRecoilValue(roomInfoState);
 
   useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
 
@@ -22,7 +22,7 @@ const Game: NextPageWithLayout = () => {
       <GameTopWrap>
         <div>Room: [ {roomNumber} ]</div>
         <GiveupButton />
-        <KickoutButton />
+        {nickname === player1 && <KickoutButton />}
       </GameTopWrap>
       <OmokBoard />
       <Players />
