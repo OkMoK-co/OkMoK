@@ -1,5 +1,11 @@
-import { routeResponseProps, room, putInfo } from '@/utils/type/socketType';
 import { socketVar } from './variable';
+import {
+  routeResponseProps,
+  room,
+  putInfo,
+  gameInfo,
+  responseType,
+} from '@/utils/type/socketType';
 
 export function loginHandler({
   packet: { data, id, option },
@@ -129,6 +135,18 @@ export function kickedoutUserHandler({
   router.push('/');
 }
 
+export function readyHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to ready');
+    return;
+  }
+
+  setResponse((prev) => ({ ...prev, packetId: id }));
+}
+
 /** game 관련 */
 export function startGameHandler({
   packet: { data, id },
@@ -138,7 +156,7 @@ export function startGameHandler({
 
   setResponse(() => ({
     packetId: id,
-    data: { startTime, winner: 0 },
+    data: { startTime, ready: true, winner: 0 },
   }));
 }
 
@@ -178,6 +196,6 @@ export function resultGameHandler({
   const winner = data.getInt8(5);
   setResponse(() => ({
     packetId: id,
-    data: { startTime: BigInt(0), winner },
+    data: { startTime: BigInt(0), ready: false, winner },
   }));
 }
