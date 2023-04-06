@@ -47,3 +47,17 @@ PACKET_ERROR_CODE GameManager::putOkmok(User* player, Poco::Int8 x, Poco::Int8 y
 
 	return PACKET_ERROR_CODE::NONE;
 }
+
+Poco::Int8 GameManager::checkWinner(Poco::Int32 gameIndex)
+{
+	Game *game = _gamePool[gameIndex];
+	
+	if (!game->checkVictory())
+	{
+		return 0;
+	}
+	
+	Poco::Int8 winner = game->getPutsBack().player;
+	game->endGame();
+	return winner;
+}

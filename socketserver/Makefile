@@ -21,5 +21,7 @@ clean :
 
 fclean : clean
 	@rm -rf ${APP_PATH}/bin/${APP}
+	
+re : fclean all
 
-.PHONY : all run build check fclean clean
+.PHONY : all run build check clean fclean re

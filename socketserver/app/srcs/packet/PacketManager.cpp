@@ -254,6 +254,8 @@ void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, P
 void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, Poco::Int32 gameIndex)
 {
 	PutInfo put = _gameManager.getGamePool()[gameIndex]->getPutsBack();
+	Poco::Int8 result = _gameManager.checkWinner(gameIndex);
+	packet.result = result;
 	packet.x = put.x;
 	packet.y = put.y;
 	packet.player = put.player;
@@ -275,9 +277,9 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 	}
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 	
-	R_GAME_PUT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_PUT_RESPONSE);
-	makePutGame(broadcastPacket, user->getGameIndex());
-
 	/**추후 방 전체 유저에게 전송*/
+	R_GAME_PUT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_PUT_RESPONSE);
+	makePutGame(broadcastPacket, user->getGameIndex());	
+	/* 모든 유저에게 (수정) */
 	sendPacketFunc(connIndex, (char *)&broadcastPacket, broadcastPacket.packetSize);
 }

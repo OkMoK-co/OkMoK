@@ -61,13 +61,14 @@ export const gameInfoState = atom<gameInfo>({
   key: 'gameInfoState',
   default: {
     startTime: BigInt(0),
-    winner: '',
+    winner: 0,
   },
 });
 
 export const putInfoState = atom<putInfo>({
   key: 'putInfoState',
   default: {
+    result: 0,
     x: -1,
     y: -1,
     player: 0,

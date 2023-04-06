@@ -6,9 +6,10 @@ import styled from 'styled-components';
 
 interface timerAndPutProps {
   point: number[];
+  clearPoint: () => void;
 }
 
-export default function TimerAndPut({ point }: timerAndPutProps) {
+export default function TimerAndPut({ point, clearPoint }: timerAndPutProps) {
   const { limitTime } = useRecoilValue(roomInfoState);
   const socket = useRecoilValue(socketState);
   const putHandler = () => {
@@ -19,6 +20,7 @@ export default function TimerAndPut({ point }: timerAndPutProps) {
     data.setInt8(1, y);
     data.setBigUint64(2, BigInt(0), true);
     socket?.send(requestHandler({ id: socketVar.GAME_PUT_REQUEST, body }));
+    clearPoint();
   };
 
   return (
