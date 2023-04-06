@@ -49,6 +49,8 @@ void User::login(Poco::UInt32 connectIndex)
 {
     _index = connectIndex;
     _userId = connectIndex + 1;
+		_roomIndex = -1;
+    _gameIndex = -1;
 }
 
 void User::logout()

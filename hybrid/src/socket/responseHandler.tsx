@@ -9,10 +9,12 @@ export function loginHandler({
     return;
   }
 
-  let userId = data.getBigUint64(5, true);
+  const userId = data.getBigUint64(5, true);
+  const nickname = 'guest' + userId.toString();
+
   setResponse(() => ({
     packetId: id,
-    data: { id: userId },
+    data: { id: userId, nickname },
   }));
 }
 
@@ -105,7 +107,40 @@ export function exitRoomHandler({
   router.push('/');
 }
 
+export function kickoutUserHandler({
+  packet: { option, router },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to kick out');
+    return;
+  }
+
+  alert('Success to kick out');
+}
+
+export function kickedoutUserHandler({
+  packet: { router },
+  setResponse,
+}: routeResponseProps) {
+  alert('You are kicked out');
+
+  router.push('/');
+}
+
 /** game 관련 */
+export function startGameHandler({
+  packet: { data, id },
+  setResponse,
+}: routeResponseProps) {
+  const startTime = data.getBigUint64(5, true);
+
+  setResponse(() => ({
+    packetId: id,
+    data: { startTime, winner: '' },
+  }));
+}
+
 export function putHandler({
   packet: { data, id, option },
   setResponse,
@@ -132,5 +167,17 @@ export function recievePutHandler({
   setResponse(() => ({
     packetId: id,
     data: putInfo,
+  }));
+}
+
+export function resultGameHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  const winner = 'guest' + data.getBigUint64(5, true).toString();
+
+  setResponse(() => ({
+    packetId: id,
+    data: { startTime: BigInt(0), winner },
   }));
 }
