@@ -4,8 +4,7 @@ import PointBoard from './PointBoard';
 import useDrawOkmok from '@/hooks/useDrawOkmok';
 
 export default function OmokBoard() {
-  const { drawPoint, pointXY, canvasRef, pointRef, clearPoint } =
-    useDrawOkmok();
+  const { drawPoint, pointXY, canvasRef, pointRef } = useDrawOkmok();
 
   return (
     <div>
@@ -14,7 +13,7 @@ export default function OmokBoard() {
         <PointBoard ref={pointRef} onClickBoard={drawPoint} />
         {/* pointboard는 내차례일 때만 활성화되어야함 */}
       </BoardWrap>
-      <TimerAndPut point={pointXY} clearPoint={clearPoint} />
+      <TimerAndPut point={pointXY} />
     </div>
   );
 }

@@ -40,7 +40,7 @@ export default function useDrawOkmok() {
     ctx.stroke();
   };
 
-  const clearPoint = () => {
+  const clearPointCanvas = () => {
     const ctx = pointRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -57,6 +57,7 @@ export default function useDrawOkmok() {
     ctx.arc(BLANK + x * 25, BLANK + y * 25, 10, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
+    clearPointCanvas();
   };
 
   /**
@@ -107,5 +108,5 @@ export default function useDrawOkmok() {
     drawBoard(canvas);
   }, []);
 
-  return { drawPoint, pointXY, canvasRef, pointRef, clearPoint };
+  return { drawPoint, pointXY, canvasRef, pointRef };
 }
