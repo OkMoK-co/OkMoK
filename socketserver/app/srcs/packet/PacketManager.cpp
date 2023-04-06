@@ -21,6 +21,7 @@ void PacketManager::init(const int maxSessionCount)
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_INFO_REQUEST] = &PacketManager::processInfoRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_EXIT_REQUEST] = &PacketManager::processExitRoom;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_KICKOUT_REQUEST] = &PacketManager::processKickoutUser;
+	_recvFuntionDictionary[(int)PACKET_ID::ROOM_READY_REQUEST] = &PacketManager::processReadyUser;
 
 	_recvFuntionDictionary[(int)PACKET_ID::GAME_PUT_REQUEST] = &PacketManager::processPutGame;
 
@@ -249,6 +250,45 @@ void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, P
 
 	broadcastMainRooms();
 	broadcastInfoRoom(roomIndex);
+}
+
+void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	ROOM_READY_RESPONSE_PACKET packet = makePacketHeader<ROOM_READY_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_READY_RESPONSE);
+
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+
+	Poco::Int32 roomIndex = user->getRoomIndex();
+	if(roomIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	if (_gameManager.getGamePool()[roomIndex]->getStartTime() != 0)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	std::list<User*> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
+	if (users.size() != 2)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
+	user->ready();
+
+	if (users.front()->getReady() && users.back()->getReady()){
+		/* todo: 게임이 시작됩니다. */
+		_gameManager.createGame(roomIndex, users.front(), users.back());
+	}
+
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
 void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put, Poco::Int8 result)

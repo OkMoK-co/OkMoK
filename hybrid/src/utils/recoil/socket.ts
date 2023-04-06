@@ -16,8 +16,10 @@ export const socketState = atom<WebSocket | null>({
 /* todo: 각 컴포넌트에서 사용할 상태 변경을 set에 추가해주세요 */
 export const responseState = selector<any>({
   key: 'responseState',
-  get: ({ get }) => {},
-  set: ({ set }, newValue) => {
+  get: ({ get }) => {
+    get;
+  },
+  set: ({ set, get }, newValue) => {
     switch (newValue.packetId) {
       case socketVar.LOGIN_RESPONSE:
         set(userState, newValue.data);
@@ -29,6 +31,9 @@ export const responseState = selector<any>({
       case socketVar.ROOM_INFO_RESPONSE:
       case socketVar.R_ROOM_INFO_RESPONSE:
         set(roomInfoState, newValue.data);
+        break;
+      case socketVar.ROOM_READY_RESPONSE:
+        set(gameInfoState, (get) => ({ ...get, ready: !get.ready }));
         break;
       case socketVar.R_GAME_START_RESPONSE:
       case socketVar.R_GAME_RESULT_RESPONSE:
@@ -61,6 +66,7 @@ export const gameInfoState = atom<gameInfo>({
   key: 'gameInfoState',
   default: {
     startTime: BigInt(0),
+    ready: false,
     winner: 0,
   },
 });

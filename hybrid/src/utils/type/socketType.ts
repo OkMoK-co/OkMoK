@@ -49,6 +49,7 @@ export interface roomInfo {
 
 export interface gameInfo {
   startTime: BigInt;
+  ready: boolean;
   winner: number;
 }
 

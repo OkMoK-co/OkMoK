@@ -36,6 +36,7 @@ class PacketManager
 		void processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processKickoutUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
+		void processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 
 		void makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put, Poco::Int8 result);
 		void makeGameResult(R_GAME_RESULT_RESPONSE_PACKET &packet, Poco::Int8 result);
