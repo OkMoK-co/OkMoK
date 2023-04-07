@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { IoSearch, IoCloseCircle } from 'react-icons/io5';
+import { IoSearch } from 'react-icons/io5';
+import { ImEnter } from 'react-icons/im';
+import { socketVar } from '@/socket/variable';
+import { useRequest } from '@/hooks/useRequest';
+import { makeEnterRoomBody } from './RoomItem';
 
 export default function SearchBar() {
   const [search, setSearch] = useState('');
@@ -9,6 +13,11 @@ export default function SearchBar() {
     if (roomValid.test(event.target.value)) setSearch(event.target.value);
   };
 
+  const enterRoomHandler = useRequest({
+    id: socketVar.ROOM_ENTER_REQUEST,
+    body: makeEnterRoomBody(Number(search)),
+  });
+
   return (
     <div>
       <input
@@ -16,11 +25,17 @@ export default function SearchBar() {
         value={search}
         onChange={searchHandler}
         maxLength={10}
-        placeholder='방 번호로 입장하기'
+        placeholder='Enter by room number'
       />
-      <button>
-        <IoSearch />
-      </button>
+      {search ? (
+        <button onClick={enterRoomHandler}>
+          <ImEnter />
+        </button>
+      ) : (
+        <button>
+          <IoSearch />
+        </button>
+      )}
     </div>
   );
 }
