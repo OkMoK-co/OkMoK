@@ -3,7 +3,7 @@ import { roomsState } from '@/utils/recoil/socket';
 import RoomItem from './RoomItem';
 
 export default function Rooms() {
-  const rooms = useRecoilValue(roomsState).rooms;
+  const { rooms } = useRecoilValue(roomsState);
 
   return (
     <div>

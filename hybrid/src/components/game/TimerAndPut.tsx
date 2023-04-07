@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
-import { requestHandler } from '@/socket/requestHandler';
+import { roomInfoState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
-import { roomInfoState, socketState } from '@/utils/recoil/socket';
+import { useRequest } from '@/hooks/useRequest';
 import styled from 'styled-components';
 
 interface timerAndPutProps {
@@ -10,16 +10,21 @@ interface timerAndPutProps {
 
 export default function TimerAndPut({ point }: timerAndPutProps) {
   const { limitTime } = useRecoilValue(roomInfoState);
-  const socket = useRecoilValue(socketState);
-  const putHandler = () => {
+
+  const makePutBody = () => {
     const [x, y] = point;
     const body = new ArrayBuffer(10);
     const data = new DataView(body);
     data.setInt8(0, x);
     data.setInt8(1, y);
     data.setBigUint64(2, BigInt(0), true);
-    socket?.send(requestHandler({ id: socketVar.GAME_PUT_REQUEST, body }));
+    return body;
   };
+
+  const putHandler = useRequest({
+    id: socketVar.GAME_PUT_REQUEST,
+    body: makePutBody(),
+  });
 
   return (
     <TimerWrap>
