@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '@/utils/recoil/socket';
-import { useRequest } from './useRequest';
+import { useRequest } from '@/hooks/useRequest';
 
 interface useEnterPageProps {
   id: number;
