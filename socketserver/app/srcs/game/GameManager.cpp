@@ -29,18 +29,18 @@ PACKET_ERROR_CODE GameManager::putOkmok(User* player, Poco::Int8 x, Poco::Int8 y
 
 	if (gameIndex == -1)
 	{
-		return PACKET_ERROR_CODE::GAME_PUT_ERROR;
+		return PACKET_ERROR_CODE::GAME_ERROR;
 	}
 
 	game = _gamePool[gameIndex];
 	if (!game->isCurrentPlayer(player))
 	{
-		return PACKET_ERROR_CODE::GAME_PUT_ERROR;
+		return PACKET_ERROR_CODE::GAME_ERROR;
 	}
 
 	if (!game->isValidPut(x, y))
 	{
-		return PACKET_ERROR_CODE::GAME_PUT_ERROR;
+		return PACKET_ERROR_CODE::GAME_ERROR;
 	}
 
 	game->addPut(x, y, 0);
@@ -50,14 +50,21 @@ PACKET_ERROR_CODE GameManager::putOkmok(User* player, Poco::Int8 x, Poco::Int8 y
 
 Poco::Int8 GameManager::checkWinner(Poco::Int32 gameIndex)
 {
+	Poco::Int8 result = 0;
 	Game *game = _gamePool[gameIndex];
+
+	if (game->checkVictory())
 	
-	if (!game->checkVictory())
+	
 	{
-		return 0;
+		result = game->getPutsBack().player;
+		game->endGame();
 	}
-	
-	Poco::Int8 winner = game->getPutsBack().player;
-	game->endGame();
-	return winner;
+	if (game->checkDraw())
+	{
+		result = 3;
+		game->endGame();
+	}
+
+	return result;
 }

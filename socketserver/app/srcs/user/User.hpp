@@ -19,6 +19,7 @@ class User
         void leaveRoom();
         void login(Poco::UInt32 connectIndex);
 				void ready();
+        void unReady();
         void logout();
 
         

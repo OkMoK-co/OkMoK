@@ -8,7 +8,7 @@
 enum class PACKET_ERROR_CODE : short
 {
 	NONE = 0,
-	GAME_PUT_ERROR = 1,
+	GAME_ERROR = 1,
 	ROOM_ERROR = 2,
 };
 

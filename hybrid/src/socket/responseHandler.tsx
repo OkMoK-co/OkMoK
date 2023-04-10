@@ -1,11 +1,4 @@
-import { socketVar } from './variable';
-import {
-  routeResponseProps,
-  room,
-  putInfo,
-  gameInfo,
-  responseType,
-} from '@/utils/type/socketType';
+import { routeResponseProps, room, putInfo } from '@/utils/type/socketType';
 
 export function loginHandler({
   packet: { data, id, option },

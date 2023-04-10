@@ -1,15 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { putInfoState } from '@/utils/recoil/socket';
+import { gameInfoState, putInfoState } from '@/utils/recoil/socket';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, BLANK } from '@/utils/constants';
 
 export default function useDrawOkmok() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointRef = useRef<HTMLCanvasElement | null>(null);
   const putInfo = useRecoilValue(putInfoState);
+  const { startTime } = useRecoilValue(gameInfoState);
   const [pointXY, setPointXY] = useState<number[]>([-1, -1]);
   const initBoard = Array.from(Array(15), () => new Array(15).fill(0));
   const [board, setBoard] = useState<number[][]>(initBoard);
+  const [isStart, setIsStart] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsStart(!!startTime);
+    clearPointCanvas();
+  }, [startTime]);
+  useEffect(() => {
+    if (!isStart) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!ctx || !canvas) return;
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    setBoard(initBoard);
+    drawBoard(canvas);
+  }, [isStart]);
 
   const getCoordinate = (
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
@@ -30,14 +46,14 @@ export default function useDrawOkmok() {
     const { x, y } = getCoordinate(event);
     if (x < 0 || y < 0) return;
     if (board[y][x]) return;
-    setPointXY([x, y]);
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.beginPath();
-    ctx.strokeStyle = '#ff00ff';
-    ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+    ctx.strokeStyle = '#ffff00';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.arc(BLANK + x * 25, BLANK + y * 25, 10, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
+    setPointXY([x, y]);
   };
 
   const clearPointCanvas = () => {

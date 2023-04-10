@@ -14,7 +14,6 @@ export default function SocketConnect({ children }: SocketConnectProps) {
   const [socket, setSocket] = useRecoilState(socketState);
   const [response, setResponse] = useRecoilState(responseState);
   const router = useRouter();
-  const loginHandler = useRequest({ id: socketVar.LOGIN_REQUEST });
 
   useEffect(() => {
     if (!socket) {
@@ -25,7 +24,12 @@ export default function SocketConnect({ children }: SocketConnectProps) {
       newSocket.addEventListener('open', () => {
         console.log('WebSocket connection opened!');
         setSocket(newSocket);
-        loginHandler();
+        const buffer = new ArrayBuffer(5);
+        const data = new DataView(buffer);
+        data.setInt16(0, 5, true);
+        data.setInt16(2, socketVar.LOGIN_REQUEST, true);
+        data.setInt8(4, 0);
+        newSocket.send(data);
       });
 
       newSocket.addEventListener('message', (event) => {

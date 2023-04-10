@@ -115,6 +115,16 @@ struct GAME_PUT_REQUEST_PACKET
 	Poco::UInt64 time;
 };
 
+struct GAME_GIVEUP_RESPONSE_PACKET : public PACKET_HEADER
+{
+	
+};
+
+struct R_GAME_START_RESPONSE_PACKET : public PACKET_HEADER 
+{
+	Poco::UInt64 startTime;
+};
+
 struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
 {
 	Poco::Int8 x;
@@ -127,5 +137,6 @@ struct R_GAME_RESULT_RESPONSE_PACKET : public PACKET_HEADER
 {
 	Poco::Int8 result;
 };
+
 
 #pragma pack(pop)

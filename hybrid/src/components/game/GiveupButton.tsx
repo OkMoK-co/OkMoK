@@ -1,15 +1,16 @@
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useRequest } from '@/hooks/useRequest';
+import { socketVar } from '@/socket/variable';
 
 export default function GiveupButton() {
-  const [isActivate, setActivate] = useState(false);
-  return <Button active={isActivate}> give up </Button>;
+  const sendGiveUpHandler = useRequest({ id: socketVar.GAME_GIVEUP_REQUEST });
+  return <Button onClick={sendGiveUpHandler}>give up</Button>;
 }
 
-const Button = styled.button<{ active: boolean }>`
-  color: ${(props) => (props.active ? '#00ff00' : '#808080')};
+const Button = styled.button`
+  color: #00ff00;
   background-color: black;
-  border: solid ${(props) => (props.active ? '#00ff00' : '#808080')};
+  border: solid #00ff00;
   border-radius: 1rem;
   width: 5rem;
   height: 1.5rem;

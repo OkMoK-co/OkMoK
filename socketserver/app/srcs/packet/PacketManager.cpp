@@ -24,7 +24,7 @@ void PacketManager::init(const int maxSessionCount)
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_READY_REQUEST] = &PacketManager::processReadyUser;
 
 	_recvFuntionDictionary[(int)PACKET_ID::GAME_PUT_REQUEST] = &PacketManager::processPutGame;
-
+	_recvFuntionDictionary[(int)PACKET_ID::GAME_GIVEUP_REQUEST] = &PacketManager::processGiveUpGame;
 }
 
 void PacketManager::process(int connectionIndex, const Poco::UInt16 packetID, char* pBuf, Poco::Int16 bodySize)
@@ -281,14 +281,18 @@ void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poc
 	}
 
 	user->ready();
+	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	std::list<User*> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
 	if (users.size() == 2 && users.front()->getReady() && users.back()->getReady()){
-		/* todo: 게임이 시작됩니다. */
 		_gameManager.createGame(roomIndex, users.front(), users.back());
+		R_GAME_START_RESPONSE_PACKET rPacket = makePacketHeader<R_GAME_START_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_START_RESPONSE);
+		rPacket.startTime = _gameManager.getGamePool()[roomIndex]->getStartTime();
+		for (User *user: users)
+		{
+			sendPacketFunc(user->getIndex(), (char *)&rPacket, rPacket.packetSize);
+		}
 	}
-
-	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 }
 
 void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put, Poco::Int8 result)
@@ -327,13 +331,50 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 	R_GAME_PUT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_PUT_RESPONSE);
 	makePutGame(broadcastPacket, putInfo, result);
 	/* 모든 유저에게 (수정) */
-	sendPacketFunc(connIndex, (char *)&broadcastPacket, broadcastPacket.packetSize);
-
+	std::list<User *> users = _roomManager.getRoomPool()[user->getRoomIndex()]->getUsers();
+	for (User *user : users)
+	{
+		sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
+	}
+	
 	if (!result)
 	{
 		return;
 	}
+	
 	R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
 	makeGameResult(gameResultPacket, result);
-	sendPacketFunc(connIndex, (char *)&gameResultPacket, gameResultPacket.packetSize);
+	for (User *user : users)
+	{
+		sendPacketFunc(user->getIndex(), (char *)&gameResultPacket, gameResultPacket.packetSize);
+	}
 }
+
+void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	GAME_GIVEUP_RESPONSE_PACKET packet = makePacketHeader<GAME_GIVEUP_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_GIVEUP_RESPONSE);
+	
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	
+	Poco::Int32 gameIndex = user->getGameIndex();
+	if (gameIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return;
+	}
+	
+	R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
+		
+	Game *game = _gameManager.getGamePool()[gameIndex];
+	Poco::Int8 result = 3 - game->takePlayerByUser(user);
+	makeGameResult(gameResultPacket, result);
+	
+	std::list<User *> users = _roomManager.getRoomPool()[user->getRoomIndex()]->getUsers();
+	for (User *user : users)
+	{
+		sendPacketFunc(user->getIndex(), (char *)&gameResultPacket, gameResultPacket.packetSize);
+	}
+	game->endGame();
+}
+
