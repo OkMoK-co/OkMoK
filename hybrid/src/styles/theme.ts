@@ -40,13 +40,13 @@ const radiuses = {
 const commons = {
   flexCenter: `
     display: flex;
-    justify-contents: center;
+    justify-content: center;
     align-items: center;
   `,
   flexCenterColumn: `
     display: flex;
     flex-direction: column;
-    justify-contents: center;
+    justify-content: center;
     align-items: center;
   `,
 };
