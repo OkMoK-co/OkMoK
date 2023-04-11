@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
-import { gameInfoState, roomInfoState } from '@/utils/recoil/socket';
+import { roomInfoState } from '@/utils/recoil/socket';
 import styled from 'styled-components';
 
 interface timerAndPutProps {
@@ -30,7 +30,11 @@ export default function TimerAndPut({ active, point }: timerAndPutProps) {
   return (
     <TimerWrap>
       <div>{limitTime}</div>
-      <PutButton active={active} onClick={putHandler} disabled={!active}>
+      <PutButton
+        active={active && point[0] > -1}
+        onClick={putHandler}
+        disabled={!active || point[0] < 0}
+      >
         put
       </PutButton>
       <div>{limitTime}</div>

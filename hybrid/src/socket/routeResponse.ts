@@ -12,6 +12,7 @@ import {
   startGameHandler,
   putHandler,
   recievePutHandler,
+  giveupHandler,
   resultGameHandler,
 } from './responseHandler';
 import { routeResponseProps } from '@/utils/type/socketType';
@@ -35,5 +36,6 @@ export const routeResponse: {
   [socketVar.R_GAME_START_RESPONSE]: startGameHandler,
   [socketVar.GAME_PUT_RESPONSE]: putHandler,
   [socketVar.R_GAME_PUT_RESPONSE]: recievePutHandler,
+  [socketVar.GAME_GIVEUP_RESPONSE]: giveupHandler,
   [socketVar.R_GAME_RESULT_RESPONSE]: resultGameHandler,
 };

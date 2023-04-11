@@ -54,8 +54,6 @@ Poco::Int8 GameManager::checkWinner(Poco::Int32 gameIndex)
 	Game *game = _gamePool[gameIndex];
 
 	if (game->checkVictory())
-	
-	
 	{
 		result = game->getPutsBack().player;
 		game->endGame();
@@ -68,3 +66,9 @@ Poco::Int8 GameManager::checkWinner(Poco::Int32 gameIndex)
 
 	return result;
 }
+
+Game *GameManager::takeGameByGameIndex(Poco::Int32 gameIndex)
+{
+	return _gamePool[gameIndex];
+}
+

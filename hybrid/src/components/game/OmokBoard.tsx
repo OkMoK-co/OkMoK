@@ -2,23 +2,19 @@ import styled from 'styled-components';
 import TimerAndPut from '@/components/game/TimerAndPut';
 import PointBoard from './PointBoard';
 import useDrawOkmok from '@/hooks/useDrawOkmok';
-import useGame from '@/hooks/useGame';
+import useTurn from '@/hooks/useTurn';
 
 export default function OmokBoard() {
   const { drawPoint, pointXY, canvasRef, pointRef } = useDrawOkmok();
-  const { isMyTurn } = useGame();
+  const { isMyTurn } = useTurn();
 
   return (
     <div>
       <BoardWrap>
         <Canvas ref={canvasRef}>This browser is not supported.</Canvas>
-        <PointBoard
-          ref={pointRef}
-          active={isMyTurn()}
-          onClickBoard={drawPoint}
-        />
+        <PointBoard ref={pointRef} active={isMyTurn} onClickBoard={drawPoint} />
       </BoardWrap>
-      <TimerAndPut active={isMyTurn()} point={pointXY} />
+      <TimerAndPut active={isMyTurn} point={pointXY} />
     </div>
   );
 }

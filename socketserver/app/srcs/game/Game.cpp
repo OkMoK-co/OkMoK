@@ -34,11 +34,10 @@ Poco::UInt8 Game::takePlayerByUser(User *user)
 	{
 		return 1;
 	} 
-	if (_player2 == user)
+	else
 	{
 		return 2;
 	}
-	return 0;
 }
 
 void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
@@ -48,6 +47,7 @@ void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 	_player2 = player2;
 	_player1->setGameIndex(_gameIndex);
 	_player2->setGameIndex(_gameIndex);
+	_currentStoneCount = 0;
 	_currentPlayer = 1;
 	_startTime = static_cast<Poco::UInt64>(std::time(NULL));
 }

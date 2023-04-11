@@ -169,6 +169,7 @@ export function recievePutHandler({
 }: routeResponseProps) {
   if (!option) {
     alert('Failed to recieve put');
+    return;
   }
   const putInfo: putInfo = {
     x: data.getInt8(5),
@@ -180,6 +181,16 @@ export function recievePutHandler({
     packetId: id,
     data: putInfo,
   }));
+}
+
+export function giveupHandler({
+  packet: { data, id, option },
+  setResponse,
+}: routeResponseProps) {
+  if (!option) {
+    alert('Failed to give up');
+    return;
+  }
 }
 
 export function resultGameHandler({
