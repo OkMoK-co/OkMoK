@@ -8,6 +8,8 @@ Game::Game(Poco::Int32 gameIndex, Poco::UInt8 limitTime)
 	_startTime = 0;
 	_player1 = NULL;
 	_player2 = NULL;
+	_currentPlayer = 0;
+	_currentStoneCount = 0;
 	memset(_gameBoard, 0, 15 * 15);
 }
 
@@ -26,6 +28,18 @@ Poco::UInt64 Game::getStartTime()
 	return _startTime;
 }
 
+Poco::UInt8 Game::takePlayerByUser(User *user)
+{
+	if (_player1 == user)
+	{
+		return 1;
+	} 
+	else
+	{
+		return 2;
+	}
+}
+
 void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 {
 	_gameId = gameId;
@@ -33,6 +47,7 @@ void Game::startGame(Poco::Int32 gameId, User *player1, User *player2)
 	_player2 = player2;
 	_player1->setGameIndex(_gameIndex);
 	_player2->setGameIndex(_gameIndex);
+	_currentStoneCount = 0;
 	_currentPlayer = 1;
 	_startTime = static_cast<Poco::UInt64>(std::time(NULL));
 }
@@ -43,9 +58,12 @@ void Game::endGame()
 	_startTime = 0;
 	_player1->setGameIndex(-1);
 	_player2->setGameIndex(-1);
+	_player1->unReady();
+	_player2->unReady();
 	_player1 = NULL;
 	_player2 = NULL;
 	_currentPlayer = 0;
+	_currentStoneCount = 0;
 	_puts.clear();
 	memset(_gameBoard, 0, 15 * 15);
 }
@@ -56,6 +74,7 @@ void Game::addPut(Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time)
 	_puts.push_back(put);
 	_gameBoard[y][x] = _currentPlayer;
 	_currentPlayer = 3 - _currentPlayer;
+	_currentStoneCount += 1;
 }
 
 bool Game::isCurrentPlayer(User *player)
@@ -82,6 +101,18 @@ bool Game::isValidPut(Poco::Int8 x, Poco::Int8 y)
 		return false;
 	}
 	return true;
+}
+
+bool Game::checkDraw()
+{
+	if (_currentStoneCount == Okmok::MAX_STONE_COUNT)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool Game::checkVictory()

@@ -17,11 +17,15 @@ class Game
 		PutInfo getPutsBack();
 		Poco::UInt64 getStartTime();
 
+		Poco::UInt8 takePlayerByUser(User *user);
+
 		void startGame(Poco::Int32 gameId, User *player1, User *player2);
 		void endGame();
 		void addPut(Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time);
+		
 		bool isCurrentPlayer(User *player);
 		bool isValidPut(Poco::Int8 x, Poco::Int8 y);
+		bool checkDraw();
 		bool checkVictory();
 
 	private:
@@ -32,6 +36,7 @@ class Game
 		User *_player1;
 		User *_player2;
 		Poco::UInt8 _currentPlayer;
+		Poco::UInt16 _currentStoneCount;
 		std::list<PutInfo> _puts;
 		Poco::UInt8 _gameBoard[15][15];
 };

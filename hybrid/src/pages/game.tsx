@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 import type { NextPageWithLayout } from '@/pages/_app';
+import styled from 'styled-components';
 import { gameInfoState, roomInfoState, userState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
 import useEnterPage from '@/hooks/useEnterPage';
@@ -10,7 +11,6 @@ import Players from '@/components/game/Players';
 import OmokBoard from '@/components/game/OmokBoard';
 import KickoutButton from '@/components/game/KickoutButton';
 import { ReadyButton } from '@/components/game/ReadyButton';
-import styled from 'styled-components';
 
 const Game: NextPageWithLayout = () => {
   const { nickname } = useRecoilValue(userState);

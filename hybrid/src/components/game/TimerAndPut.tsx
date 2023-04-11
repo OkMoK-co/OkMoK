@@ -1,14 +1,15 @@
 import { useRecoilValue } from 'recoil';
-import { roomInfoState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
+import { roomInfoState } from '@/utils/recoil/socket';
 import styled from 'styled-components';
 
 interface timerAndPutProps {
+  active: boolean;
   point: number[];
 }
 
-export default function TimerAndPut({ point }: timerAndPutProps) {
+export default function TimerAndPut({ active, point }: timerAndPutProps) {
   const { limitTime } = useRecoilValue(roomInfoState);
 
   const makePutBody = () => {
@@ -29,7 +30,13 @@ export default function TimerAndPut({ point }: timerAndPutProps) {
   return (
     <TimerWrap>
       <div>{limitTime}</div>
-      <PutButton onClick={putHandler}>put</PutButton>
+      <PutButton
+        active={active && point[0] > -1}
+        onClick={putHandler}
+        disabled={!active || point[0] < 0}
+      >
+        put
+      </PutButton>
       <div>{limitTime}</div>
     </TimerWrap>
   );
@@ -40,16 +47,19 @@ const TimerWrap = styled.div`
   justify-content: space-around;
   height: 2rem;
   color: white;
+  background-color: black;
+  border-radius: 1rem;
+  border: solid white;
 `;
 
-const PutButton = styled.button`
+const PutButton = styled.button<{ active: boolean }>`
   color: black;
-  background-color: #00ff00;
-  border: solid #00ff00;
+  background-color: ${(props) => (props.active ? '#00ff00' : '#808080')};
+  border: none;
   border-radius: 1rem;
   width: 5rem;
   height: 1.5rem;
   &:hover {
-    cursor: pointer;
+    cursor: ${(props) => (props.active ? 'pointer' : 'default')};
   }
 `;

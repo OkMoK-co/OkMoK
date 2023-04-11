@@ -71,6 +71,11 @@ void User::ready()
 	}
 }
 
+void User::unReady()
+{
+	_ready = 0;
+}
+
 void User::logout()
 {
     _index = -1;
