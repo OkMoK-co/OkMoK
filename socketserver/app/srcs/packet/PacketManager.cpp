@@ -113,6 +113,16 @@ void PacketManager::broadcastPutInfo(Poco::Int32 roomIndex, PutInfo putInfo, Poc
 	}
 }
 
+void PacketManager::broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>users)
+{
+	R_GAME_START_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_START_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_START_RESPONSE);
+	broadcastPacket.startTime = _gameManager.takeGameByGameIndex(gameIndex)->getStartTime();
+	for (User *user: users)
+	{
+		sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
+	}
+}
+
 void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result)
 {
 	R_GAME_RESULT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
@@ -238,6 +248,14 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 		return ;
 	}
 
+	Poco::Int32 gameIndex = user->getGameIndex();
+	if(gameIndex != -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
 	_roomManager.exitRoom((Poco::Int32)roomIndex, user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
@@ -266,9 +284,10 @@ void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, P
 		return ;
 	}
 
-	if (_gameManager.takeGameByGameIndex(user->getRoomIndex())->getStartTime() != 0)
+	Poco::Int32 gameIndex = user->getGameIndex();
+	if(gameIndex != -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -299,8 +318,8 @@ void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poc
 		return ;
 	}
 	
-	Poco::Int32 gameIndex = roomIndex;
-	if (_gameManager.takeGameByGameIndex(gameIndex)->getStartTime() != 0)
+	Poco::Int32 gameIndex = user->getGameIndex();
+	if(gameIndex != -1)
 	{
 		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
@@ -311,14 +330,10 @@ void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poc
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	std::list<User*> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
-	if (users.size() == 2 && users.front()->getReady() && users.back()->getReady()){
+	if (users.size() == 2 && users.front()->getReady() && users.back()->getReady())
+	{
 		_gameManager.createGame(roomIndex, users.front(), users.back());
-		R_GAME_START_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_START_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_START_RESPONSE);
-		broadcastPacket.startTime = _gameManager.takeGameByGameIndex(gameIndex)->getStartTime();
-		for (User *user: users)
-		{
-			sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
-		}
+		broadcastGameStart(gameIndex, users);
 	}
 }
 
@@ -378,6 +393,14 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 	GAME_GIVEUP_RESPONSE_PACKET packet = makePacketHeader<GAME_GIVEUP_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_GIVEUP_RESPONSE);
 	
 	User *user = _userManager.takeUserByConnIndex(connIndex);
+
+	Poco::Int32 roomIndex = user->getRoomIndex();
+	if (roomIndex == -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return;	
+	}
 	
 	Poco::Int32 gameIndex = user->getGameIndex();
 	if (gameIndex == -1)
@@ -385,14 +408,6 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return;
-	}
-	
-	Poco::Int32 roomIndex = user->getRoomIndex();
-	if (roomIndex == -1)
-	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
-		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-		return;	
 	}
 	
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);

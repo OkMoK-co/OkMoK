@@ -96,7 +96,7 @@ export function infoRoomHandler({
 }
 
 export function exitRoomHandler({
-  packet: { option, router },
+  packet: { id, option, router },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -104,11 +104,13 @@ export function exitRoomHandler({
     return;
   }
 
+  setResponse((prev) => ({ ...prev, packetId: id }));
+
   router.push('/');
 }
 
 export function kickoutUserHandler({
-  packet: { option, router },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -129,7 +131,7 @@ export function kickedoutUserHandler({
 }
 
 export function readyHandler({
-  packet: { data, id, option },
+  packet: { id, option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
