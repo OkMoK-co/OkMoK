@@ -28,10 +28,10 @@ export const routeResponse: {
   [socketVar.ROOM_ENTER_RESPONSE]: enterRoomHandler,
   [socketVar.ROOM_INFO_RESPONSE]: infoRoomHandler,
   [socketVar.R_ROOM_INFO_RESPONSE]: infoRoomHandler,
+  [socketVar.ROOM_READY_RESPONSE]: readyHandler,
   [socketVar.ROOM_EXIT_RESPONSE]: exitRoomHandler,
   [socketVar.ROOM_KICKOUT_RESPONSE]: kickoutUserHandler,
   [socketVar.R_ROOM_EXIT_RESPONSE]: kickedoutUserHandler,
-  [socketVar.ROOM_READY_RESPONSE]: readyHandler,
 
   [socketVar.R_GAME_START_RESPONSE]: startGameHandler,
   [socketVar.GAME_PUT_RESPONSE]: putHandler,

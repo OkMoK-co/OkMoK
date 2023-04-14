@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { gameInfoState, roomInfoState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
@@ -6,22 +5,17 @@ import { useRequest } from '@/hooks/useRequest';
 import styled from 'styled-components';
 
 export default function KickoutButton() {
+  const sendKickoutHandler = useRequest({ id: socketVar.ROOM_KICKOUT_REQUEST });
   const { startTime } = useRecoilValue(gameInfoState);
   const { player2 } = useRecoilValue(roomInfoState);
-  const [isActivate, setActivate] = useState(false);
-  const sendKickoutHandler = useRequest({ id: socketVar.ROOM_KICKOUT_REQUEST });
-
-  useEffect(() => {
-    if (!startTime && player2) setActivate(true);
-    else setActivate(false);
-  }, [startTime, player2]);
+  const isActive = !startTime && player2;
 
   const kickoutHandler = () => {
-    if (isActivate) sendKickoutHandler();
+    if (isActive) sendKickoutHandler();
   };
 
   return (
-    <Button active={isActivate} onClick={kickoutHandler}>
+    <Button active={isActive} onClick={kickoutHandler}>
       kick out
     </Button>
   );

@@ -26,6 +26,7 @@ class PacketManager
 		template <typename T>
 		void makeInfoRoom(T &packet, Poco::Int32 roomIndex);
 		void broadcastInfoRoom(Poco::Int32 roomIndex);
+		void broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>users);
 
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
