@@ -52,12 +52,6 @@ std::list<User*> Room::getUsers()
 
 void Room::enterUser(User *user)
 {
-    if (_currentUserCount >= _maxUserCount)
-		{
-        /* 방 들어가기 실패 패킷 보내기*/
-        return ;
-    }
-		
     _users.push_back(user);
     user->enterRoom(_roomIndex);
     _currentUserCount = _users.size();
@@ -65,13 +59,8 @@ void Room::enterUser(User *user)
 
 void Room::leaveUser(User *user)
 {
-    if (_currentUserCount <= 0)
-		{
-        /* 방 나가기 실패 패킷 보내기*/
-        return ;
-    }
-
-    _users.remove(user);
+		_users.remove(user);
+    user->unReady();
     user->leaveRoom();
     _currentUserCount = _users.size();
 }

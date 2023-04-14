@@ -35,6 +35,9 @@ export const responseState = selector<any>({
       case socketVar.ROOM_READY_RESPONSE:
         set(gameInfoState, (get) => ({ ...get, ready: !get.ready }));
         break;
+      case socketVar.ROOM_EXIT_RESPONSE:
+        set(gameInfoState, (get) => ({ ...get, ready: false }));
+        break;
       case socketVar.R_GAME_START_RESPONSE:
       case socketVar.R_GAME_RESULT_RESPONSE:
         set(gameInfoState, newValue.data);
