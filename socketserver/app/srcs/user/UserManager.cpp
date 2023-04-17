@@ -1,4 +1,3 @@
-
 #include "UserManager.hpp"
 
 /**
@@ -14,7 +13,7 @@ UserManager::UserManager()
 
 UserManager::~UserManager()
 {
-	
+
 }
 
 std::list<User *> UserManager::getMainUsers()

@@ -91,7 +91,7 @@ void	WebSocketServer::run()
 				/**
 				* 패킷 ID가 유효할 경우, 해당 패킷 요청을 처리합니다.
 				*/
-				if (packetInfo.packetID > (short)PACKET_ID::INTERNAL_END)
+				if (packetInfo.packetID > 0)
 				{
 					_packetManager.process(packetInfo.sessionIndex,
 					                       packetInfo.packetID,
@@ -101,7 +101,7 @@ void	WebSocketServer::run()
 				/**
 				* 패킷 ID가 PACKET_ID::INTERNAL_CLOSE일 경우, 해당 세션을 해제합니다.
 				*/
-				if (packetInfo.packetID == (short)PACKET_ID::INTERNAL_CLOSE)
+				if (packetInfo.packetID == (Poco::UInt16)PACKET_ID::INTERNAL_CLOSE)
 				{
 					unRegisterSesssion(packetInfo.sessionIndex);
 				}
@@ -133,6 +133,12 @@ void	WebSocketServer::SetFunction()
 	};
 	Session::_addPacketFunc = addPacketFunc;
 
+	auto addPriorityPacketFunc = [&](const bool bInternal,  const int sessionIndex, const short pktID, const short bodySize, char* pDataPos)
+	{
+		this->addPriorityPacketQueue(bInternal, sessionIndex, pktID, bodySize, pDataPos);
+	};
+	Session::_addPriorityPacketFunc = addPriorityPacketFunc;
+
 	auto sendPacketFunc = [&](const int sessionIndex, const char* pData, const int dataSize)
 	{
 		this->sendPacket(sessionIndex, pData, dataSize);
@@ -155,7 +161,7 @@ void	WebSocketServer::onConnect(Session* pSession)
 */
 void	WebSocketServer::onClose(Session* pSession)
 {
-	addPacketQueue(true, pSession->getIndex(), (short) PACKET_ID::INTERNAL_CLOSE, 0, nullptr);
+	 addPriorityPacketQueue(true, pSession->getIndex(), (short) PACKET_ID::INTERNAL_CLOSE, 0, nullptr);
 }
 
 
@@ -181,6 +187,19 @@ void	WebSocketServer::addPacketQueue(const bool bInternal, const Poco::Int32 ses
 	_packetQueue.push_back(packetInfo);
 }
 
+void	WebSocketServer::addPriorityPacketQueue(const bool bInternal, const Poco::Int32 sessionIndex, const short pktID, const short bodySize, char* pDataPos)
+{
+	std::lock_guard<std::mutex> lock(_mutexPriorityPacketQueue);
+
+	RecvPacketInfo packetInfo;
+	packetInfo.sessionIndex = sessionIndex;
+	packetInfo.packetID = pktID;
+	packetInfo.packetBodySize = bodySize;
+	packetInfo.pBodyData = pDataPos;
+	_priorityPacketQueue.push_back(packetInfo);
+}
+
+
 /**
  * @brief 서버에서 처리할 내용을 패킷 큐에 추가합니다.
  * @param bInternal 서버 내부에서 요청한 건가?
@@ -191,9 +210,21 @@ void	WebSocketServer::addPacketQueue(const bool bInternal, const Poco::Int32 ses
  */
 RecvPacketInfo WebSocketServer::getPacketInfo()
 {
-	std::lock_guard<std::mutex> lock(_mutexPacketQueue);
-
 	RecvPacketInfo packetInfo;
+
+	std::lock_guard<std::mutex> priorityLock(_mutexPriorityPacketQueue);
+
+	if (_priorityPacketQueue.empty() == false)
+	{
+		packetInfo = _priorityPacketQueue.front();
+		_priorityPacketQueue.pop_front();
+	}
+	if (packetInfo.packetID != 0)
+	{
+		return packetInfo;
+	}
+
+	std::lock_guard<std::mutex> lock(_mutexPacketQueue);
 
 	if (_packetQueue.empty() == false)
 	{

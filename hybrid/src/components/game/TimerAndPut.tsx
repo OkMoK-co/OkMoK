@@ -1,8 +1,7 @@
-import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
-import { roomInfoState } from '@/utils/recoil/socket';
-import styled from 'styled-components';
+import Timer from '@/components/game/Timer';
 
 interface timerAndPutProps {
   active: boolean;
@@ -10,15 +9,15 @@ interface timerAndPutProps {
 }
 
 export default function TimerAndPut({ active, point }: timerAndPutProps) {
-  const { limitTime } = useRecoilValue(roomInfoState);
-
   const makePutBody = () => {
     const [x, y] = point;
+    const cur = new Date();
+    const utc = cur.getTime() + cur.getTimezoneOffset() * 60 * 1000;
     const body = new ArrayBuffer(10);
     const data = new DataView(body);
     data.setInt8(0, x);
     data.setInt8(1, y);
-    data.setBigUint64(2, BigInt(0), true);
+    data.setBigUint64(2, BigInt(utc), true);
     return body;
   };
 
@@ -29,7 +28,7 @@ export default function TimerAndPut({ active, point }: timerAndPutProps) {
 
   return (
     <TimerWrap>
-      <div>{limitTime}</div>
+      <Timer player={1} />
       <PutButton
         active={active && point[0] > -1}
         onClick={putHandler}
@@ -37,7 +36,7 @@ export default function TimerAndPut({ active, point }: timerAndPutProps) {
       >
         put
       </PutButton>
-      <div>{limitTime}</div>
+      <Timer player={2} />
     </TimerWrap>
   );
 }

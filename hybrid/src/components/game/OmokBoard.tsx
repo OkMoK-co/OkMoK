@@ -21,6 +21,7 @@ export default function OmokBoard() {
 
 const BoardWrap = styled.div`
   height: 400px;
+  width: 375px;
 `;
 
 const Canvas = styled.canvas`

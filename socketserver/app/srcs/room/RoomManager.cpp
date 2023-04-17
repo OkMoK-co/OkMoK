@@ -1,13 +1,13 @@
 #include "RoomManager.hpp"
 
-RoomManager::RoomManager() 
+RoomManager::RoomManager()
 {
 
 }
 
-RoomManager::~RoomManager() 
+RoomManager::~RoomManager()
 {
-	
+
 }
 
 std::vector<Room*> RoomManager::getRoomPool()
@@ -76,7 +76,7 @@ PACKET_ERROR_CODE RoomManager::enterRoom(Poco::Int32 roomIndex, User *user)
 	{
 		return PACKET_ERROR_CODE::ROOM_ERROR;
 	}
-	
+
 	Room *room = _roomPool[roomIndex];
 	if (room->getCurrentUserCount() == 0 || !(room->getCurrentUserCount() < room->getMaxUserCount()))
 	{

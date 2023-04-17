@@ -23,7 +23,7 @@ add_executable(socketserver
 	${CMAKE_CURRENT_SOURCE_DIR}/room/Room.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/game/GameManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/game/Game.cpp
-
+	${CMAKE_CURRENT_SOURCE_DIR}/game/GameTimer.cpp
 )
 
 # 링커에 필요한 라이브러리 설정

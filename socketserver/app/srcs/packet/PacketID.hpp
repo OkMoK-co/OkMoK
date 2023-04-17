@@ -1,10 +1,11 @@
 #pragma once
-
+#include <Poco/types.h>
 /**
  * @brief 패킷 ID를 정의하는 부분입니다.
  */
-enum class PACKET_ID : unsigned short
+enum PACKET_ID : Poco::UInt16
 {
+	INTERNAL_GAME_TIME_OUT = 33,
 	INTERNAL_BEGIN = 101,
 	INTERNAL_CLOSE = 107,
 	INTERNAL_END = 150,

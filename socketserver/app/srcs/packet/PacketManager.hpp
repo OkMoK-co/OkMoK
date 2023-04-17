@@ -16,10 +16,10 @@ class PacketManager
 
 		void init(const int maxSessionCount);
 		void process(Poco::Int32 connectionIndex, const Poco::UInt16 packetID, char* pBuf, Poco::Int16 bodySize);
-		
+
 		template <typename T>
 		T makePacketHeader(Poco::UInt16 packetID);
-		
+
 		template <typename T>
 		void makeMainRooms(T &packet);
 		void broadcastMainRooms();
@@ -28,9 +28,11 @@ class PacketManager
 		void broadcastInfoRoom(Poco::Int32 roomIndex);
 		void broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>users);
 
+		void processDisConnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
+
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
-		
+
 		void processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processEnterRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
@@ -46,10 +48,11 @@ class PacketManager
 
 		void processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
+		void processTimeOutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 
 		std::function<void(const int, const char*, const int)> sendPacketFunc;
 
-	private:
+private:
 		typedef void(PacketManager::* PROCESS_RECV_PACKET_FUNCTION)(Poco::Int32, char*, Poco::Int16);
 		/**
 		 * @brief 패킷 요청별 처리할 함수를 저장합나다.

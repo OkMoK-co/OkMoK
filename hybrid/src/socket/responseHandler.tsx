@@ -179,6 +179,7 @@ export function recievePutHandler({
     player: data.getInt8(7),
     time: data.getBigUint64(8, true),
   };
+  console.log(putInfo);
   setResponse(() => ({
     packetId: id,
     data: putInfo,

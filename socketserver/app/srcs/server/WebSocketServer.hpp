@@ -46,6 +46,7 @@ private:
 	/* packet */
 	void sendPacket(const int sessionIndex, const char* pData, const int size);
 	void addPacketQueue(const bool bInternal, const Poco::Int32 sessionIndex, const short pktID, const short bodySize, char* pDataPos);
+	void addPriorityPacketQueue(const bool bInternal, const Poco::Int32 sessionIndex, const short pktID, const short bodySize, char* pDataPos);
 	RecvPacketInfo getPacketInfo();
 
 	/* variable */
@@ -55,7 +56,9 @@ private:
 
 	bool _isRun = false;
 
+	std::mutex _mutexPriorityPacketQueue;
 	std::mutex _mutexPacketQueue;
+	std::deque<RecvPacketInfo> _priorityPacketQueue;
 	std::deque<RecvPacketInfo> _packetQueue;
 
 	std::mutex _mutexSessionPool;
