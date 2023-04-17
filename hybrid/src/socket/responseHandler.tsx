@@ -108,7 +108,7 @@ export function exitRoomHandler({
 }
 
 export function kickoutUserHandler({
-  packet: { option, router },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -129,7 +129,7 @@ export function kickedoutUserHandler({
 }
 
 export function readyHandler({
-  packet: { data, id, option },
+  packet: { id, option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -154,7 +154,7 @@ export function startGameHandler({
 }
 
 export function putHandler({
-  packet: { data, id, option },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -184,7 +184,7 @@ export function recievePutHandler({
 }
 
 export function giveupHandler({
-  packet: { data, id, option },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -194,7 +194,7 @@ export function giveupHandler({
 }
 
 export function resultGameHandler({
-  packet: { data, id, option },
+  packet: { data, id },
   setResponse,
 }: routeResponseProps) {
   const winner = data.getInt8(5);
