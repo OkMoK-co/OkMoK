@@ -4,7 +4,6 @@ void gameTimerHandler(void* context);
 
 dispatch_queue_t GameTimer::_gameTimerQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_CONCURRENT);
 
-
 GameTimer::GameTimer()
 {
 }
