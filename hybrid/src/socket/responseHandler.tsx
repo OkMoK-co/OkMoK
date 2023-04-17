@@ -96,7 +96,7 @@ export function infoRoomHandler({
 }
 
 export function exitRoomHandler({
-  packet: { option, router },
+  packet: { id, option, router },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -104,6 +104,7 @@ export function exitRoomHandler({
     return;
   }
 
+  setResponse((prev) => ({ ...prev, packetId: id }));
   router.push('/');
 }
 
