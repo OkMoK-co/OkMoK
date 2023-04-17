@@ -12,7 +12,7 @@ void PacketManager::init(const int maxSessionCount)
 	_gameManager.init(maxSessionCount);
 
 	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
-	_recvFuntionDictionary[(int)PACKET_ID::INTERNAL_CLOSE] = &PacketManager::processDisconnected;
+	_recvFuntionDictionary[(int)PACKET_ID::INTERNAL_CLOSE] = &PacketManager::processDisConnected;
 	_recvFuntionDictionary[(int)PACKET_ID::INTERNAL_GAME_TIME_OUT] = &PacketManager::processTimeOutGame;
 	_recvFuntionDictionary[(int)PACKET_ID::DEV_ECHO] = &PacketManager::processDevEcho;
 
@@ -138,7 +138,7 @@ void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result
 	}
 }
 
-void PacketManager::processDisconnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+void PacketManager::processDisConnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 
@@ -458,7 +458,7 @@ void PacketManager::processTimeOutGame(Poco::Int32 connIndex, char* pBodyData, P
 {
 	TimeOutInfo *timeOutInfo = reinterpret_cast<TimeOutInfo *>(pBodyData);
 
-	if (_gameManager.timeOutOkmok(timeOutInfo) != PACKET_ERROR_CODE::NONE)
+	if (_gameManager.timoutOkmok(timeOutInfo) != PACKET_ERROR_CODE::NONE)
 	{
 		return ;
 	}
