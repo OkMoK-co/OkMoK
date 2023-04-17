@@ -18,7 +18,7 @@ class GameManager
 
 		void createGame(Poco::Int32 roomIndex, User *player1, User *player2);
 		PACKET_ERROR_CODE putOkmok(User *user, Poco::Int8 x, Poco::Int8 y, Poco::UInt64 time);
-		PACKET_ERROR_CODE timeOutOkmok(TimeOutInfo *timeOutInfo);
+		PACKET_ERROR_CODE timeoutOkmok(TimeOutInfo *timeOutInfo);
 
 		/* 게임 결과 확인 */
 		Poco::Int8 checkWinner(Poco::Int32 gameIndex);
