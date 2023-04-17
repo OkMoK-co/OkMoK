@@ -96,7 +96,7 @@ export function infoRoomHandler({
 }
 
 export function exitRoomHandler({
-  packet: { id, option, router },
+  packet: { option, router },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -104,13 +104,11 @@ export function exitRoomHandler({
     return;
   }
 
-  setResponse((prev) => ({ ...prev, packetId: id }));
-
   router.push('/');
 }
 
 export function kickoutUserHandler({
-  packet: { option },
+  packet: { option, router },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -131,7 +129,7 @@ export function kickedoutUserHandler({
 }
 
 export function readyHandler({
-  packet: { id, option },
+  packet: { data, id, option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -179,7 +177,6 @@ export function recievePutHandler({
     player: data.getInt8(7),
     time: data.getBigUint64(8, true),
   };
-  console.log(putInfo);
   setResponse(() => ({
     packetId: id,
     data: putInfo,
