@@ -37,6 +37,7 @@ Poco::UInt32 Game::getCurrentTurn()
 {
 	return _puts.size();
 }
+
 Poco::UInt8 Game::takePlayerByUser(User *user)
 {
 	if (_player1 == user)

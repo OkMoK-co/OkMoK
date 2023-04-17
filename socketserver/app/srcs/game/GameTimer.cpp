@@ -18,7 +18,6 @@ void GameTimer::init(Poco::Int32 gameIndex)
 	_timeOutInfo.gameCurrentTurn = 0;
 }
 
-#include <iostream>
 void GameTimer::start()
 {
 	_gameTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _gameTimerQueue);

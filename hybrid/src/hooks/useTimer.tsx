@@ -29,12 +29,12 @@ export default function useTimer({ active }: TimerProps) {
         return prev - SEC;
       });
     }, SEC);
-  }, [setTimer, clearTimer, limitTime]);
+  }, []);
 
   const stop = useCallback(() => {
     setTimer((limitTime - 1) * SEC);
     clearTimer();
-  }, [limitTime, clearTimer]);
+  }, [limitTime]);
 
   return { timer };
 }
