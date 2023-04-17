@@ -2,31 +2,17 @@ import styled from 'styled-components';
 import useTimer from '@/hooks/useTimer';
 import { SEC } from '@/utils/constants';
 import { useRecoilValue } from 'recoil';
-import {
-  gameInfoState,
-  putInfoState,
-  roomInfoState,
-} from '@/utils/recoil/socket';
-import { useEffect, useState } from 'react';
+import { roomInfoState } from '@/utils/recoil/socket';
+import useTurn from '@/hooks/useTurn';
 
 interface TimerProps {
   player: number;
 }
 
 export default function Timer({ player }: TimerProps) {
-  const { startTime } = useRecoilValue(gameInfoState);
-  const putInfo = useRecoilValue(putInfoState);
   const { limitTime } = useRecoilValue(roomInfoState);
-  const [active, setActive] = useState(false);
-  const { timer } = useTimer({ active: active });
-
-  useEffect(() => {
-    if (startTime) {
-      if (!putInfo.player && player === 1) setActive(true);
-      else if (putInfo.player && putInfo.player !== player) setActive(true);
-      else setActive(false);
-    } else setActive(false);
-  }, [startTime, putInfo]);
+  const { isMyTurn: active } = useTurn(player);
+  const { timer } = useTimer({ active });
 
   return (
     <div>

@@ -9,7 +9,9 @@ export default function useDrawOkmok() {
   const putInfo = useRecoilValue(putInfoState);
   const { startTime } = useRecoilValue(gameInfoState);
   const [pointXY, setPointXY] = useState<number[]>([-1, -1]);
-  const initBoard = Array.from(Array(15), () => new Array(15).fill(0));
+  const initBoard: number[][] = Array.from(Array(15), () =>
+    new Array(15).fill(0)
+  );
   const [board, setBoard] = useState<number[][]>(initBoard);
   const [isStart, setIsStart] = useState<boolean>(false);
 
@@ -17,6 +19,7 @@ export default function useDrawOkmok() {
     setIsStart(!!startTime);
     clearPointCanvas();
   }, [startTime]);
+
   useEffect(() => {
     if (!isStart) return;
     const canvas = canvasRef.current;
