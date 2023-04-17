@@ -28,7 +28,7 @@ class PacketManager
 		void broadcastInfoRoom(Poco::Int32 roomIndex);
 		void broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>users);
 
-		void processDisConnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
+		void processDisconnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 
 		void processDevEcho(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processLogin(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
