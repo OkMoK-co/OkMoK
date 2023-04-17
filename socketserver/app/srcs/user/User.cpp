@@ -15,7 +15,7 @@ Poco::Int32 User::getIndex()
     return _index;
 }
 
-Poco::Int64 User::getUserId() 
+Poco::Int64 User::getUserId()
 {
     return _userId;
 }
@@ -78,10 +78,10 @@ void User::unReady()
 
 void User::logout()
 {
-    _index = -1;
-    _userId = 0;
-    _roomIndex = -1;
-		_ready = 0;
-    _gameIndex = -1;
+	_index = -1;
+	_userId = 0;
+	_roomIndex = -1;
+	_ready = 0;
+	_gameIndex = -1;
 }
 

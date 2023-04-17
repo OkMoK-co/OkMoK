@@ -5,12 +5,19 @@
 
 #include "../packet/Packet.hpp"
 #include "../packet/RecvRingBuffer.hpp"
-#include "Poco/Net/WebSocket.h"
-#include "Poco/Net/HTTPServerParams.h"
-#include "Poco/Net/HTTPServerSession.h"
-#include "Poco/Net/HTTPServerResponseImpl.h"
-#include "Poco/Net/HTTPServerRequestImpl.h"
+
+#include <Poco/Net/WebSocket.h>
+#include <Poco/Net/HTTPServerParams.h>
+#include <Poco/Net/HTTPServerSession.h>
+#include <Poco/Net/HTTPServerResponseImpl.h>
+#include <Poco/Net/HTTPServerRequestImpl.h>
+#include <Poco/Observer.h>
+#include <Poco/Net/SocketReactor.h>
+#include <Poco/Net/SocketNotification.h>
+
 #include <iostream>
+
+
 
 /**
  * @brief 클라이언트의 세션을 관리하는 클래스입니다.
@@ -52,8 +59,8 @@ public:
 
 	static std::function<void(Session*)> _onConnection;
 	static std::function<void(Session*)> _onClose;
+	static std::function<void(const bool, const int, const short, const short, char*)> _addPriorityPacketFunc;
 	static std::function<void(const bool, const int, const short, const short, char*)> _addPacketFunc;
-
 
 	void setIndex(const int index) { mIndex = index; }
 	int getIndex() { return mIndex; }
@@ -157,7 +164,15 @@ private:
 			std::cout << pHeader->packetID << std::endl;
 			std::cout << bodySize << std::endl;
 			std::cout << &pBuffer[PACKET_HEADER_LENGTH] << std::endl;
-			_addPacketFunc(false, mIndex, pHeader->packetID, bodySize, &pBuffer[PACKET_HEADER_LENGTH]);
+
+			if (pHeader->packetID == PACKET_ID::GAME_PUT_REQUEST)
+			{
+				_addPriorityPacketFunc(false, mIndex, pHeader->packetID, bodySize, &pBuffer[PACKET_HEADER_LENGTH]);
+			}
+			else
+			{
+				_addPacketFunc(false, mIndex, pHeader->packetID, bodySize, &pBuffer[PACKET_HEADER_LENGTH]);
+			}
 
 			remainByte -= pHeader->packetSize;
 			totalReadSize += pHeader->packetSize;
@@ -200,4 +215,5 @@ private:
 
 inline std::function<void(Session*)> Session::_onConnection;
 inline std::function<void(Session*)> Session::_onClose;
+inline std::function<void(const bool, const int, const short, const short, char*)> Session::_addPriorityPacketFunc;
 inline std::function<void(const bool, const int, const short, const short, char*)> Session::_addPacketFunc;

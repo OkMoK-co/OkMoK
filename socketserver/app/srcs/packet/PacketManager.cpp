@@ -12,8 +12,10 @@ void PacketManager::init(const int maxSessionCount)
 	_gameManager.init(maxSessionCount);
 
 	_recvFuntionDictionary = std::unordered_map<int, PROCESS_RECV_PACKET_FUNCTION>();
+	_recvFuntionDictionary[(int)PACKET_ID::INTERNAL_CLOSE] = &PacketManager::processDisconnected;
+	_recvFuntionDictionary[(int)PACKET_ID::INTERNAL_GAME_TIME_OUT] = &PacketManager::processTimeOutGame;
 	_recvFuntionDictionary[(int)PACKET_ID::DEV_ECHO] = &PacketManager::processDevEcho;
-	
+
 	_recvFuntionDictionary[(int)PACKET_ID::LOGIN_REQUEST] = &PacketManager::processLogin;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_MAIN_REQUEST] = &PacketManager::processEnterMain;
 	_recvFuntionDictionary[(int)PACKET_ID::ROOM_CREATE_REQUEST] = &PacketManager::processCreateRoom;
@@ -91,9 +93,9 @@ void PacketManager::makeMainRooms(T &packet) {
 void PacketManager::broadcastMainRooms()
 {
 	R_ROOM_LIST_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_ROOM_LIST_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_ROOM_LIST_RESPONSE);
-	
+
 	makeMainRooms(broadcastPacket);
-	
+
 	std::list<User *> mainUsers = _userManager.getMainUsers();
 	for (User *user : mainUsers)
 	{
@@ -105,7 +107,7 @@ void PacketManager::broadcastPutInfo(Poco::Int32 roomIndex, PutInfo putInfo, Poc
 {
 	R_GAME_PUT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_PUT_RESPONSE);
 	makePutGame(broadcastPacket, putInfo, result);
-	
+
 	std::list<User *> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
 	for (User *user : users)
 	{
@@ -126,9 +128,9 @@ void PacketManager::broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>us
 void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result)
 {
 	R_GAME_RESULT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
-		
+
 	makeGameResult(broadcastPacket, result);
-	
+
 	std::list<User *> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
 	for (User *user : users)
 	{
@@ -136,12 +138,45 @@ void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result
 	}
 }
 
+void PacketManager::processDisconnected(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+
+	Poco::Int32 roomIndex = user->getRoomIndex();
+	Poco::Int32 gameIndex = user->getGameIndex();
+
+	if (gameIndex != -1)
+	{
+		Game *game = _gameManager.takeGameByGameIndex(gameIndex);
+		Poco::Int8 result = 3 - game->takePlayerByUser(user);
+
+		R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
+
+		makeGameResult(gameResultPacket, result);
+
+		User *rivalUser = game->takeRivalUserByUser(user);
+		sendPacketFunc(rivalUser->getIndex(), (char *)&gameResultPacket, gameResultPacket.packetSize);
+
+		game->endGame();
+	}
+
+	if (roomIndex != -1)
+	{
+		_roomManager.exitRoom(roomIndex, user);
+		broadcastMainRooms();
+		broadcastInfoRoom(roomIndex);
+	}
+
+	_userManager.deleteMainUsers(user);
+	user->logout();
+}
+
 void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_MAIN_RESPONSE_PACKET packet = makePacketHeader<ROOM_MAIN_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_MAIN_RESPONSE);
 
 	makeMainRooms(packet);
-	
+
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 	_userManager.addMainUsers(user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
@@ -150,15 +185,15 @@ void PacketManager::processEnterMain(Poco::Int32 connIndex, char* pBodyData, Poc
 void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_CREATE_RESPONSE_PACKET packet = makePacketHeader<ROOM_CREATE_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
-	
+
 	Poco::Int32 roomIndex = _roomManager.takeInactiveRoomIndex();
 	if(roomIndex == -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
-	
+
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 	_roomManager.createRoom((Poco::Int32)roomIndex, user);
 	_userManager.deleteMainUsers(user);
@@ -180,13 +215,13 @@ void PacketManager::makeInfoRoom(T &packet, Poco::Int32 roomIndex)
 void PacketManager::broadcastInfoRoom(Poco::Int32 roomIndex)
 {
 	Room *room = _roomManager.takeRoomByRoomIndex(roomIndex);
-	if (room->getCurrentUserCount() == 0) 
+	if (room->getCurrentUserCount() == 0)
 	{
 		return ;
 	}
 
 	R_ROOM_INFO_RESPONSE_PACKET packet = makePacketHeader<R_ROOM_INFO_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_ROOM_INFO_RESPONSE);
-	
+
 	makeInfoRoom(packet, roomIndex);
 
 	std::list<User*> restUsers = room->getUsers();
@@ -225,7 +260,7 @@ void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 	Poco::Int32 roomIndex = _userManager.takeUserByConnIndex(connIndex)->getRoomIndex();
 	if(roomIndex == -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -237,13 +272,13 @@ void PacketManager::processInfoRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_EXIT_RESPONSE_PACKET packet = makePacketHeader<ROOM_EXIT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_EXIT_RESPONSE);
-	
+
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 
 	Poco::Int32 roomIndex = user->getRoomIndex();
 	if(roomIndex == -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -251,7 +286,7 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 	Poco::Int32 gameIndex = user->getGameIndex();
 	if(gameIndex != -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -266,12 +301,12 @@ void PacketManager::processExitRoom(Poco::Int32 connIndex, char* pBodyData, Poco
 void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	ROOM_KICKOUT_RESPONSE_PACKET packet = makePacketHeader<ROOM_KICKOUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_KICKOUT_RESPONSE);
-	
+
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 	Poco::Int32 roomIndex = user->getRoomIndex();
 	if(roomIndex == -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -287,7 +322,7 @@ void PacketManager::processKickoutUser(Poco::Int32 connIndex, char* pBodyData, P
 	Poco::Int32 gameIndex = user->getGameIndex();
 	if(gameIndex != -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -313,15 +348,15 @@ void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poc
 	Poco::Int32 roomIndex = user->getRoomIndex();
 	if(roomIndex == -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
-	
+
 	Poco::Int32 gameIndex = user->getGameIndex();
 	if(gameIndex != -1)
 	{
-		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;	
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return ;
 	}
@@ -356,15 +391,14 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 	GAME_PUT_REQUEST_PACKET *putReq = reinterpret_cast<GAME_PUT_REQUEST_PACKET *>(pBodyData);
 
 	User *user = _userManager.takeUserByConnIndex(connIndex);
-	
 	Poco::Int32 roomIndex = user->getRoomIndex();
 	if (roomIndex == -1)
 	{
 		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-		return;	
+		return;
 	}
-	
+
 	PACKET_ERROR_CODE code = _gameManager.putOkmok(user, putReq->x, putReq->y, putReq->time);
 	if (code != PACKET_ERROR_CODE::NONE)
 	{
@@ -373,13 +407,13 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 		return ;
 	}
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-	
+
 	Poco::Int32 gameIndex = user->getGameIndex();
 	PutInfo putInfo = _gameManager.takeGameByGameIndex(gameIndex)->getPutsBack();
 	Poco::Int8 result = _gameManager.checkWinner(gameIndex);
 
 	broadcastPutInfo(roomIndex, putInfo, result);
-	
+
 	if (!result)
 	{
 		return;
@@ -391,7 +425,7 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	GAME_GIVEUP_RESPONSE_PACKET packet = makePacketHeader<GAME_GIVEUP_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_GIVEUP_RESPONSE);
-	
+
 	User *user = _userManager.takeUserByConnIndex(connIndex);
 
 	Poco::Int32 roomIndex = user->getRoomIndex();
@@ -399,9 +433,9 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 	{
 		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-		return;	
+		return;
 	}
-	
+
 	Poco::Int32 gameIndex = user->getGameIndex();
 	if (gameIndex == -1)
 	{
@@ -409,13 +443,26 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 		return;
 	}
-	
+
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
-	
+
 	Game *game = _gameManager.takeGameByGameIndex(gameIndex);
 	Poco::Int8 result = 3 - game->takePlayerByUser(user);
-	
+
 	broadcastGameResult(roomIndex, result);
-	
+
 	game->endGame();
+}
+
+void PacketManager::processTimeOutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
+{
+	TimeOutInfo *timeOutInfo = reinterpret_cast<TimeOutInfo *>(pBodyData);
+
+	if (_gameManager.timeOutOkmok(timeOutInfo) != PACKET_ERROR_CODE::NONE)
+	{
+		return ;
+	}
+
+	PutInfo putInfo = _gameManager.takeGameByGameIndex(timeOutInfo->gameIndex)->getPutsBack();
+	broadcastPutInfo(timeOutInfo->gameIndex, putInfo, 0);
 }

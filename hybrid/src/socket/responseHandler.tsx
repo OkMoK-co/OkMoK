@@ -105,7 +105,6 @@ export function exitRoomHandler({
   }
 
   setResponse((prev) => ({ ...prev, packetId: id }));
-
   router.push('/');
 }
 
@@ -156,7 +155,7 @@ export function startGameHandler({
 }
 
 export function putHandler({
-  packet: { data, id, option },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -186,7 +185,7 @@ export function recievePutHandler({
 }
 
 export function giveupHandler({
-  packet: { data, id, option },
+  packet: { option },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
@@ -196,7 +195,7 @@ export function giveupHandler({
 }
 
 export function resultGameHandler({
-  packet: { data, id, option },
+  packet: { data, id },
   setResponse,
 }: routeResponseProps) {
   const winner = data.getInt8(5);

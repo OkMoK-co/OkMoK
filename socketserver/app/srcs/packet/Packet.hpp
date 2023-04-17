@@ -16,7 +16,6 @@ struct RecvPacketInfo
 	char* pBodyData = 0;
 };
 
-
 #pragma pack(push, 1)
 struct PACKET_HEADER
 {
@@ -41,7 +40,7 @@ struct ROOM
 
 struct ROOM_MAIN_RESPONSE_PACKET : public PACKET_HEADER
 {
-	Poco::UInt8 roomCount = 0; 
+	Poco::UInt8 roomCount = 0;
 	struct ROOM rooms[10] = {0, };
 };
 
@@ -52,7 +51,7 @@ struct R_ROOM_LIST_RESPONSE_PACKET : public ROOM_MAIN_RESPONSE_PACKET
 
 struct ROOM_CREATE_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
 struct ROOM_ENTER_RESPONSE_PACKET : public PACKET_HEADER
@@ -85,25 +84,25 @@ struct R_ROOM_INFO_RESPONSE_PACKET : public PACKET_HEADER
 
 struct ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
 struct ROOM_KICKOUT_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
 struct R_ROOM_EXIT_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
 struct ROOM_READY_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
-struct GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
+struct GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER
 {
 
 };
@@ -117,15 +116,15 @@ struct GAME_PUT_REQUEST_PACKET
 
 struct GAME_GIVEUP_RESPONSE_PACKET : public PACKET_HEADER
 {
-	
+
 };
 
-struct R_GAME_START_RESPONSE_PACKET : public PACKET_HEADER 
+struct R_GAME_START_RESPONSE_PACKET : public PACKET_HEADER
 {
 	Poco::UInt64 startTime;
 };
 
-struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER 
+struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER
 {
 	Poco::Int8 x;
 	Poco::Int8 y;
@@ -133,7 +132,7 @@ struct R_GAME_PUT_RESPONSE_PACKET : public PACKET_HEADER
 	Poco::UInt64 time;
 };
 
-struct R_GAME_RESULT_RESPONSE_PACKET : public PACKET_HEADER 
+struct R_GAME_RESULT_RESPONSE_PACKET : public PACKET_HEADER
 {
 	Poco::Int8 result;
 };

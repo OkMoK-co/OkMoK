@@ -73,7 +73,6 @@ export default function useDrawOkmok() {
     ctx.arc(BLANK + x * 25, BLANK + y * 25, 10, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
-    clearPointCanvas();
   };
 
   /**
@@ -101,9 +100,10 @@ export default function useDrawOkmok() {
     const { x, y, player } = putInfo;
     const color = player === 1 ? '#00ff00' : '#ff00ff';
     drawOkmok(x, y, color);
+    clearPointCanvas();
     if (x > -1 && y > -1) {
       setBoard((cur) => {
-        let newBoard = [...cur];
+        const newBoard = [...cur];
         newBoard[y][x] = player;
         return newBoard;
       });
