@@ -25,30 +25,42 @@ const colors = {
 };
 
 const fontsizes = {
-  giant: '2.1rem',
-  big: '1.2rem',
+  xxlarge: '3rem',
+  xlarge: '2rem',
+  large: '1.2rem',
   medium: '1rem',
   small: '0.8rem',
 };
 
 const radiuses = {
-  big: '1rem',
+  big: '3rem',
   small: '0.6rem',
   mini: '0.3rem',
 };
 
-const commons = {
-  flexCenter: `
+const thick = {
+  bold: '4px',
+  middle: '3px',
+  thin: '2px',
+};
+
+const flexs = {
+  center: `
     display: flex;
     justify-content: center;
     align-items: center;
   `,
-  flexCenterColumn: `
+  centerColumn: `
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   `,
+  spaceBetween: `
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`,
 };
 
 export const theme: DefaultTheme = {
@@ -56,5 +68,6 @@ export const theme: DefaultTheme = {
   colors,
   fontsizes,
   radiuses,
-  commons,
+  thick,
+  flexs,
 };

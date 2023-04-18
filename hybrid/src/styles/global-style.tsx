@@ -6,16 +6,29 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;  
     box-sizing: border-box;
   }
+
 	body {
-		background: ${({ theme }) => theme.colors.black};
+		width: 100vw;
+    height: 100vh;
+		background-color: ${({ theme }) => theme.colors.black};
 		color: ${({ theme }) => theme.colors.white};
-		${({ theme }) => theme.commons.flexCenter};
-		
 	}
+
+	button {
+		all: unset;
+		cursor:pointer
+	}
+
+	input {
+		all: unset;
+	}
+
 	a {
   color: inherit;
   text-decoration: none;
-}
+	cursor: pointer;
+	}
+
 `;
 
 export default GlobalStyle;
