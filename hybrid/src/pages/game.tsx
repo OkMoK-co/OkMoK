@@ -11,6 +11,7 @@ import Players from '@/components/game/Players';
 import OmokBoard from '@/components/game/OmokBoard';
 import KickoutButton from '@/components/game/KickoutButton';
 import { ReadyButton } from '@/components/game/ReadyButton';
+import { ContentContainer } from '@/styles/common-style';
 
 const Game: NextPageWithLayout = () => {
   const { nickname } = useRecoilValue(userState);
@@ -18,9 +19,8 @@ const Game: NextPageWithLayout = () => {
   const { startTime } = useRecoilValue(gameInfoState);
 
   useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
-
   return (
-    <main>
+    <Container>
       <GameTopWrap>
         <div>Room: [ {roomNumber} ]</div>
         {startTime ? (
@@ -32,7 +32,7 @@ const Game: NextPageWithLayout = () => {
       {!startTime && <ReadyButton />}
       <OmokBoard />
       <Players />
-    </main>
+    </Container>
   );
 };
 
@@ -42,6 +42,11 @@ Game.getLayout = function getLayout(page: ReactElement) {
 
 export default Game;
 
+const Container = styled(ContentContainer)`
+  ${({ theme }) => theme.flexs.centerColumn};
+`;
+
 const GameTopWrap = styled.div`
-  display: flex;
+  ${({ theme }) => theme.flexs.spaceBetween};
+  width: 375px;
 `;

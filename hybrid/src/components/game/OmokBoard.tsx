@@ -9,23 +9,27 @@ export default function OmokBoard() {
   const { isMyTurn } = useTurn();
 
   return (
-    <div>
+    <Container>
       <BoardWrap>
         <Canvas ref={canvasRef}>This browser is not supported.</Canvas>
         <PointBoard ref={pointRef} active={isMyTurn} onClickBoard={drawPoint} />
       </BoardWrap>
       <TimerAndPut active={isMyTurn} point={pointXY} />
-    </div>
+    </Container>
   );
 }
 
+const Container = styled.div`
+  ${({ theme }) => theme.flexs.centerColumn};
+`;
+
 const BoardWrap = styled.div`
-  height: 400px;
+  height: 385px;
   width: 375px;
 `;
 
 const Canvas = styled.canvas`
   position: absolute;
   z-index: 0;
-  background-color: black;
+  background-color: ${({ theme }) => theme.colors.black};
 `;

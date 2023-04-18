@@ -15,12 +15,27 @@ export default function Timer({ player }: TimerProps) {
   const { timer } = useTimer({ active });
 
   return (
-    <div>
-      <TimeSpan active={active}>{active ? timer / SEC : limitTime}</TimeSpan>
-    </div>
+    <TimeWrap active={active} player={player}>
+      <TimeDiv active={active}>{active ? timer / SEC : limitTime}</TimeDiv>
+    </TimeWrap>
   );
 }
 
-const TimeSpan = styled.span<{ active: boolean }>`
-  color: ${(props) => (props.active ? 'white' : '#808080')};
+const TimeWrap = styled.div<{ active: boolean; player: number }>`
+  ${({ theme }) => theme.flexs.center};
+  width: 10rem;
+  border-radius: ${({ player }) =>
+    player === 1 ? '2rem 0 0 2rem' : '0 2rem 2rem 0'};
+  border: solid
+    ${({ active, theme }) =>
+      active ? theme.colors.white : theme.colors.darkgray};
+`;
+
+const TimeDiv = styled.div<{ active: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  color: ${({ theme, active }) =>
+    active ? theme.colors.white : theme.colors.darkgray};
 `;

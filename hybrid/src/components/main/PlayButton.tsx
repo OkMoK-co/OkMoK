@@ -1,6 +1,6 @@
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
-import PlayPutButton from '@/components/buttons/PalyPutButton';
+import PlayPutButton from '@/components/buttons/PlayPutButton';
 
 export default function PlayButton() {
   const createRoomHandler = useRequest({ id: socketVar.ROOM_CREATE_REQUEST });
