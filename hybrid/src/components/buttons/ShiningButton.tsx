@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import Link from 'next/link';
+import styled from 'styled-components';
 
 interface ShinningButtonProps {
-  value: any;
+  value: string;
 }
 
 export default function ShiningButton({ value }: ShinningButtonProps) {
