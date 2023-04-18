@@ -66,7 +66,6 @@ const ShinningEffect = styled.div`
     right: 0;
     width: 2px;
     height: 100%;
-    animation-delay: 0.25s;
   }
 
   a span:nth-child(3) {
@@ -85,7 +84,6 @@ const ShinningEffect = styled.div`
     animation: left-animate 1.5s linear infinite;
     width: 2px;
     height: 100%;
-    animation-delay: 0.75s;
   }
 
   @keyframes top-animate {
