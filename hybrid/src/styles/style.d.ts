@@ -6,6 +6,7 @@ declare module 'styled-components' {
     colors: { [key: string]: string };
     fontsizes: { [key: string]: string };
     radiuses: { [key: string]: string };
-    commons: { [key: string]: string };
+    thick: { [key: string]: string };
+    flexs: { [key: string]: string };
   }
 }

@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { gameInfoState, roomInfoState } from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
-import styled from 'styled-components';
+import GameButton from '@/components/buttons/GameButton';
 
 export default function KickoutButton() {
   const sendKickoutHandler = useRequest({ id: socketVar.ROOM_KICKOUT_REQUEST });
@@ -15,20 +15,11 @@ export default function KickoutButton() {
   };
 
   return (
-    <Button active={isActive} onClick={kickoutHandler}>
-      kick out
-    </Button>
+    <GameButton
+      active={isActive}
+      color={'yellow'}
+      value={'kick out'}
+      clickHandler={kickoutHandler}
+    />
   );
 }
-
-const Button = styled.button<{ active: boolean }>`
-  color: ${(props) => (props.active ? '#ffff00' : '#808080')};
-  background-color: black;
-  border: solid ${(props) => (props.active ? '#ffff00' : '#808080')};
-  border-radius: 1rem;
-  width: 5rem;
-  height: 1.5rem;
-  &:hover {
-    cursor: pointer;
-  }
-`;

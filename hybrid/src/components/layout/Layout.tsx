@@ -1,5 +1,7 @@
 import Header from './Header';
 import Footer from './Footer';
+import styled from 'styled-components';
+import { LayoutContainer } from '@/styles/common-style';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,10 +9,12 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <>
+    <Container>
       <Header />
-      <main>{children}</main>
+      {children}
       <Footer />
-    </>
+    </Container>
   );
 }
+
+const Container = styled(LayoutContainer)``;
