@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { ContentContainer } from '@/styles/common-style';
-import { theme } from '@/styles/theme';
 
 export default function ShinningBackground() {
   return (
