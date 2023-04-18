@@ -6,8 +6,6 @@ import ShiningBackground from '@/components/animation/ShiningBackground';
 import ShiningButton from '@/components/buttons/ShiningButton';
 
 export default function Page404() {
-  const router = useRouter();
-
   return (
     <Container>
       <ShiningBackground />
