@@ -1,23 +1,20 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
 interface ShinningButtonProps {
   value: any;
-  clickHandler: () => void;
 }
 
-export default function ShiningButton({
-  value,
-  clickHandler,
-}: ShinningButtonProps) {
+export default function ShiningButton({ value }: ShinningButtonProps) {
   return (
     <ShinningEffect>
-      <a onClick={clickHandler}>
+      <Link href='/login'>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         {value}
-      </a>
+      </Link>
     </ShinningEffect>
   );
 }
