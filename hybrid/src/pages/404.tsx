@@ -1,6 +1,4 @@
 import { ContentContainer } from '@/styles/common-style';
-import { theme } from '@/styles/theme';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ShiningBackground from '@/components/animation/ShiningBackground';
 import ShiningButton from '@/components/buttons/ShiningButton';
@@ -23,7 +21,8 @@ const Container = styled(ContentContainer)`
 `;
 
 const Content = styled.div`
-  ${theme.flexs.centerColumn};
+  ${({ theme }) => theme.flexs.centerColumn}
+
   h1 {
     font-size: 9em;
     line-height: 1.3em;
@@ -31,6 +30,7 @@ const Content = styled.div`
     padding: 0;
     text-shadow: 0 0 1rem #fefefe;
   }
+
   p {
     max-width: 480px;
     font-size: 1.5em;
