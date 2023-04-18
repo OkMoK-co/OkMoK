@@ -35,6 +35,7 @@ const ShinningEffect = styled.div`
     padding: 30px 50px;
     margin: 90px 50;
   }
+
   a:hover {
     background: #fefefe;
     color: #050801;
@@ -42,13 +43,16 @@ const ShinningEffect = styled.div`
       0 0 200px #03e9f4;
     -webkit-box-reflect: below 1px linear-gradient(transition, #0005);
   }
+
   a:nth-child(2) {
     filter: hue-rotate(270deg);
   }
+
   a span {
     position: absolute;
     display: block;
   }
+
   a span:nth-child(1) {
     top: 0;
     background: linear-gradient(90deg, transparent, #ff0000);
@@ -68,7 +72,6 @@ const ShinningEffect = styled.div`
     animation-delay: 0.25s;
   }
 
-  /* 3rd line animation*/
   a span:nth-child(3) {
     bottom: 0;
     right: 0;
@@ -78,7 +81,6 @@ const ShinningEffect = styled.div`
     height: 2px;
   }
 
-  /* 4th line animation*/
   a span:nth-child(4) {
     bottom: -100%;
     left: 0;
