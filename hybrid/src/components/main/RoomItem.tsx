@@ -1,6 +1,7 @@
 import { ImHome3, ImEnter } from 'react-icons/im';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
+import ExitEnterButton from '@/components/buttons/ExitEnterButton';
 import styled from 'styled-components';
 
 interface RoomItemProps {
@@ -27,9 +28,7 @@ export default function RoomItem({
       <div>{limitTime}s</div>
       <div>{players.player1}</div>
       <div>
-        <SmallButton>
-          <ImEnter />
-        </SmallButton>
+        <ExitEnterButton value={<ImEnter />} color={'green'} />
       </div>
     </RoomItemGrid>
   );
@@ -58,22 +57,5 @@ const RoomItemGrid = styled.div`
   }
   @media (${({ theme: { device } }) => device.mobile}) {
     padding: 1rem;
-  }
-`;
-
-const SmallButton = styled.button`
-  ${({ theme }) => theme.flexs.center};
-  width: 3.5rem;
-  height: 1.8rem;
-  border-radius: ${({ theme }) => theme.radiuses.big};
-  border: ${({ theme }) => `${theme.thick.thin} solid ${theme.colors.green}`};
-  color: ${({ theme }) => theme.colors.green};
-  &:hover {
-    color: ${({ theme }) => theme.colors.darkgray};
-    background-color: ${({ theme }) => theme.colors.green};
-  }
-  @media (${({ theme: { device } }) => device.mobile}) {
-    width: 3rem;
-    height: 1.5rem;
   }
 `;

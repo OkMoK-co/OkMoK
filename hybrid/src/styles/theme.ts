@@ -34,8 +34,7 @@ const fontsizes = {
 
 const radiuses = {
   big: '3rem',
-  small: '0.6rem',
-  mini: '0.3rem',
+  small: '1rem',
 };
 
 const thick = {
