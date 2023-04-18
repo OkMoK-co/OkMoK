@@ -8,10 +8,6 @@ import ShiningButton from '@/components/buttons/ShiningButton';
 export default function Page404() {
   const router = useRouter();
 
-  const GoHomeHandler = () => {
-    router.push('/login');
-  };
-
   return (
     <Container>
       <ShiningBackground />
