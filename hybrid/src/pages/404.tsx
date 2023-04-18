@@ -10,7 +10,7 @@ export default function Page404() {
       <Content>
         <h1> 404 </h1>
         <p> Page Not Found </p>
-        <ShiningButton value='Go Home' />
+        <ShiningButton value={'Go Home'} />
       </Content>
     </Container>
   );
