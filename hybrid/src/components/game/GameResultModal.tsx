@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { CANVAS_SIZE } from '@/utils/constants';
 
 interface GameResultModalProps {
   result: number;
@@ -26,9 +27,9 @@ export default function GameResultModal({
 const GameResultWrap = styled.div`
   ${({ theme }) => theme.flexs.center};
   z-index: 100;
-  width: 375px;
-  height: 375px;
-  margin-bottom: -375px;
+  width: ${CANVAS_SIZE}px;
+  height: ${CANVAS_SIZE}px;
+  margin-bottom: -${CANVAS_SIZE}px;
   align-items: center;
 `;
 

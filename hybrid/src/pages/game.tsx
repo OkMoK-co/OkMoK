@@ -18,6 +18,7 @@ import KickoutButton from '@/components/game/KickoutButton';
 import { ReadyButton } from '@/components/game/ReadyButton';
 import { ContentContainer } from '@/styles/common-style';
 import GameResultModal from '@/components/game/GameResultModal';
+import { CANVAS_SIZE } from '@/utils/constants';
 
 const Game: NextPageWithLayout = () => {
   const { nickname } = useRecoilValue(userState);
@@ -77,6 +78,6 @@ const GameWrapper = styled.div`
 
 const GameTopWrap = styled.div`
   ${({ theme }) => theme.flexs.spaceBetween};
-  width: 375px;
+  width: ${CANVAS_SIZE}px;
   padding: 0 0.5rem;
 `;

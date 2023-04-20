@@ -3,6 +3,7 @@ import { useRequest } from '@/hooks/useRequest';
 import { socketVar } from '@/socket/variable';
 import { gameInfoState } from '@/utils/recoil/socket';
 import { useRecoilValue } from 'recoil';
+import { CANVAS_SIZE } from '@/utils/constants';
 
 export function ReadyButton() {
   const { ready } = useRecoilValue(gameInfoState);
@@ -18,9 +19,9 @@ export function ReadyButton() {
 const ButtonWrap = styled.div`
   ${({ theme }) => theme.flexs.center};
   z-index: 4;
-  width: 375px;
-  height: 375px;
-  margin-bottom: -375px;
+  width: ${CANVAS_SIZE}px;
+  height: ${CANVAS_SIZE}px;
+  margin-bottom: -${CANVAS_SIZE}px;
   align-items: center;
 `;
 
