@@ -29,6 +29,8 @@ const TimeWrap = styled.div<{ active: boolean; player: number }>`
   border: solid
     ${({ active, theme }) =>
       active ? theme.colors.white : theme.colors.darkgray};
+  filter: ${({ active }) =>
+    active ? 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.9))' : 'none'};
 `;
 
 const TimeDiv = styled.div<{ active: boolean }>`

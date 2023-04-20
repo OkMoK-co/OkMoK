@@ -16,7 +16,7 @@ const PointBoard = forwardRef<HTMLCanvasElement, PointBoardProps>(
 
 const PointBoardCanvas = styled.canvas<{ active: boolean }>`
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   pointer-events: ${(props) => (props.active ? 'auto' : 'none')};
   &:hover {
     cursor: ${(props) => (props.active ? 'pointer' : 'default')};

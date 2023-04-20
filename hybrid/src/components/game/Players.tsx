@@ -7,30 +7,34 @@ export default function Players() {
 
   return (
     <Container>
-      <PlayerWrap>
+      <Player1Wrap>
         <OkMoK player={1} />
         {player1}
-      </PlayerWrap>
+      </Player1Wrap>
       <div> vs </div>
-      <PlayerWrap>
+      <Player2Wrap>
         {player2 || '...'}
         <OkMoK player={2} />
-      </PlayerWrap>
+      </Player2Wrap>
     </Container>
   );
 }
 
 const Container = styled.div`
-  ${({ theme }) => theme.flexs.center};
-  width: 24rem;
-  justify-content: space-around;
+  ${({ theme }) => theme.flexs.spaceBetween};
+  width: 22rem;
   text-align: center;
   color: ${({ theme }) => theme.colors.white};
   margin: 0.5rem;
 `;
 
-const PlayerWrap = styled.div`
-  ${({ theme }) => theme.flexs.center};
+const Player1Wrap = styled.div`
+  display: flex;
+  width: 10rem;
+`;
+
+const Player2Wrap = styled(Player1Wrap)`
+  justify-content: right;
 `;
 const OkMoK = styled.div<{ player: number }>`
   background-color: ${({ player, theme }) =>

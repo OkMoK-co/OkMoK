@@ -1,5 +1,5 @@
-import { ReactElement } from 'react';
-import { useRecoilValue } from 'recoil';
+import { ReactElement, useState, useEffect } from 'react';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import type { NextPageWithLayout } from '@/pages/_app';
 import styled from 'styled-components';
 import { gameInfoState, roomInfoState, userState } from '@/utils/recoil/socket';
@@ -12,13 +12,28 @@ import OmokBoard from '@/components/game/OmokBoard';
 import KickoutButton from '@/components/game/KickoutButton';
 import { ReadyButton } from '@/components/game/ReadyButton';
 import { ContentContainer } from '@/styles/common-style';
+import GameResultModal from '@/components/game/GameResultModal';
 
 const Game: NextPageWithLayout = () => {
   const { nickname } = useRecoilValue(userState);
   const { roomNumber, player1 } = useRecoilValue(roomInfoState);
-  const { startTime } = useRecoilValue(gameInfoState);
-
+  const { startTime, winner } = useRecoilValue(gameInfoState);
+  const resetGameInfo = useResetRecoilState(gameInfoState);
   useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
+  const [modalState, setModalState] = useState<number>(0);
+  useEffect(() => {
+    if (!winner) return;
+    setModalState(winner);
+    resetGameInfo();
+    setTimeout(() => {
+      setModalState(0);
+    }, 5000);
+  }, [winner]);
+  const onClickModal = () => {
+    setModalState(0);
+    resetGameInfo();
+  };
+
   return (
     <Container>
       <GameTopWrap>
@@ -29,7 +44,10 @@ const Game: NextPageWithLayout = () => {
           nickname === player1 && <KickoutButton />
         )}
       </GameTopWrap>
-      {!startTime && <ReadyButton />}
+      {modalState !== 0 && (
+        <GameResultModal result={modalState} onClickModal={onClickModal} />
+      )}
+      {!startTime && modalState === 0 && <ReadyButton />}
       <OmokBoard />
       <Players />
     </Container>
@@ -49,4 +67,5 @@ const Container = styled(ContentContainer)`
 const GameTopWrap = styled.div`
   ${({ theme }) => theme.flexs.spaceBetween};
   width: 375px;
+  padding: 0 0.5rem;
 `;

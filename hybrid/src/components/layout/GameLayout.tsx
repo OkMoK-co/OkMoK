@@ -12,9 +12,10 @@ export default function GameLayout({ children }: GameLayoutProps) {
   return (
     <>
       <Container>
-        <Header />
-        <ExitButton />
-        <main>{children}</main>
+        <Header>
+          <ExitButton />
+        </Header>
+        {children}
         <Footer />
       </Container>
     </>

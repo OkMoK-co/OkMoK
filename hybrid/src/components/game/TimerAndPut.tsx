@@ -53,6 +53,7 @@ const TimerWrap = styled.div`
 
 const PutButton = styled(Button)<{ active: boolean }>`
   color: ${({ theme }) => theme.colors.black};
+  z-index: 2;
   position: absolute;
   background-color: ${({ active, theme }) =>
     active ? theme.colors.green : theme.colors.darkgray};

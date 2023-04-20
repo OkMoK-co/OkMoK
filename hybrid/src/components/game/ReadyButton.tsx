@@ -17,7 +17,7 @@ export function ReadyButton() {
 
 const ButtonWrap = styled.div`
   ${({ theme }) => theme.flexs.center};
-  z-index: 5;
+  z-index: 4;
   width: 375px;
   height: 375px;
   margin-bottom: -375px;
