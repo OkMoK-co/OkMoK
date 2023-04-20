@@ -31,5 +31,4 @@ const BoardWrap = styled.div`
 const Canvas = styled.canvas`
   position: absolute;
   z-index: 0;
-  background-color: ${({ theme }) => theme.colors.black};
 `;

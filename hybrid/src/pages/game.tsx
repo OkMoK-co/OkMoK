@@ -2,7 +2,12 @@ import { ReactElement, useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import type { NextPageWithLayout } from '@/pages/_app';
 import styled from 'styled-components';
-import { gameInfoState, roomInfoState, userState } from '@/utils/recoil/socket';
+import {
+  gameInfoState,
+  putInfoState,
+  roomInfoState,
+  userState,
+} from '@/utils/recoil/socket';
 import { socketVar } from '@/socket/variable';
 import useEnterPage from '@/hooks/useEnterPage';
 import GameLayout from '@/components/layout/GameLayout';
@@ -19,12 +24,14 @@ const Game: NextPageWithLayout = () => {
   const { roomNumber, player1 } = useRecoilValue(roomInfoState);
   const { startTime, winner } = useRecoilValue(gameInfoState);
   const resetGameInfo = useResetRecoilState(gameInfoState);
-  useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
+  const resetPutInfo = useResetRecoilState(putInfoState);
   const [modalState, setModalState] = useState<number>(0);
+  useEnterPage({ id: socketVar.ROOM_INFO_REQUEST });
   useEffect(() => {
     if (!winner) return;
     setModalState(winner);
     resetGameInfo();
+    resetPutInfo();
     setTimeout(() => {
       setModalState(0);
     }, 5000);
@@ -36,20 +43,22 @@ const Game: NextPageWithLayout = () => {
 
   return (
     <Container>
-      <GameTopWrap>
-        <div>Room: [ {roomNumber} ]</div>
-        {startTime ? (
-          <GiveupButton />
-        ) : (
-          nickname === player1 && <KickoutButton />
+      <GameWrapper>
+        <GameTopWrap>
+          <div>Room: [ {roomNumber} ]</div>
+          {startTime ? (
+            <GiveupButton />
+          ) : (
+            nickname === player1 && <KickoutButton />
+          )}
+        </GameTopWrap>
+        {modalState !== 0 && (
+          <GameResultModal result={modalState} onClickModal={onClickModal} />
         )}
-      </GameTopWrap>
-      {modalState !== 0 && (
-        <GameResultModal result={modalState} onClickModal={onClickModal} />
-      )}
-      {!startTime && modalState === 0 && <ReadyButton />}
-      <OmokBoard />
-      <Players />
+        {!startTime && modalState === 0 && <ReadyButton />}
+        <OmokBoard />
+        <Players />
+      </GameWrapper>
     </Container>
   );
 };
@@ -60,7 +69,9 @@ Game.getLayout = function getLayout(page: ReactElement) {
 
 export default Game;
 
-const Container = styled(ContentContainer)`
+const Container = styled(ContentContainer)``;
+
+const GameWrapper = styled.div`
   ${({ theme }) => theme.flexs.centerColumn};
 `;
 

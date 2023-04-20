@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import {
   gameInfoState,
   putInfoState,
@@ -12,7 +11,6 @@ export default function useTurn(player?: number) {
   const { nickname } = useRecoilValue(userState);
   const { player1 } = useRecoilValue(roomInfoState);
   const putInfo = useRecoilValue(putInfoState);
-  const resetPutInfo = useResetRecoilState(putInfoState);
   if (!player) player = player1 === nickname ? 1 : 2;
   const getMyTurn = () => {
     if (startTime) {
@@ -22,10 +20,6 @@ export default function useTurn(player?: number) {
     } else return false;
   };
   const isMyTurn = getMyTurn();
-
-  useEffect(() => {
-    resetPutInfo();
-  }, [startTime]);
 
   return { isMyTurn };
 }

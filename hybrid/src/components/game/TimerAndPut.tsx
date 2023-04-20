@@ -48,7 +48,6 @@ const TimerWrap = styled.div`
   width: 20rem;
   height: 2.4rem;
   color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.black};
 `;
 
 const PutButton = styled(Button)<{ active: boolean }>`
