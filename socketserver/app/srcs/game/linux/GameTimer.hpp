@@ -1,11 +1,14 @@
 #pragma once
 
-#include <Poco/types.h>
-#include <dispatch/dispatch.h>
 #include <vector>
 
-#include "../session/Session.hpp"
-#include "Okmok.hpp"
+#include <stdlib.h>
+#include <signal.h>
+#include <time.h>
+
+#include "../../session/Session.hpp"
+#include "../../util/PocoType.hpp"
+#include "../Okmok.hpp"
 
 struct TimeOutInfo
 {
@@ -25,7 +28,10 @@ class GameTimer {
 		void cancel();
 
 	private :
-		static dispatch_queue_t _gameTimerQueue;
-		dispatch_source_t _gameTimer;
+		struct sigaction _sigAction;
+		struct sigevent _sigEvent;
+		struct itimerspec _itimerspec;
+		timer_t _timerId;
+
 		TimeOutInfo _timeOutInfo;
 };

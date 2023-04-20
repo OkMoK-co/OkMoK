@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Poco/Types.h>
+#include "../util/PocoType.hpp"
 
 /**
  * @brief 에러 응답코드를 정의하는 부분입니다.
