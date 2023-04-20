@@ -1,23 +1,24 @@
+import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { roomInfoState } from '@/utils/recoil/socket';
-import styled from 'styled-components';
+import { Player1, Player2 } from './Player';
 
 export default function Players() {
   const { player1, player2 } = useRecoilValue(roomInfoState);
 
   return (
-    <PlayersWrap>
-      <div>{player1}</div>
+    <Container>
+      <Player1 nickname={player1} />
       <div> vs </div>
-      <div>{player2}</div>
-    </PlayersWrap>
+      <Player2 nickname={player2} />
+    </Container>
   );
 }
 
-const PlayersWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+const Container = styled.div`
+  ${({ theme }) => theme.flexs.spaceBetween};
+  width: 20rem;
   text-align: center;
-  color: white;
+  color: ${({ theme }) => theme.colors.white};
+  margin: 0.5rem;
 `;

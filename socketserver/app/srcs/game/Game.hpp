@@ -30,7 +30,9 @@ class Game
 		Poco::UInt64 getStartTime();
 		Poco::UInt8 getCurrentPlayer();
 		Poco::UInt32 getCurrentTurn();
-
+		void setGameWinner(Poco::UInt8 result);
+		
+		Poco::UInt8 takeGameResultByUser(User *user);
 		Poco::UInt8 takePlayerByUser(User *user);
 		User*   takeRivalUserByUser(User *user);
 
@@ -52,6 +54,7 @@ class Game
 		GameTimer _gameTimer;
 		User *_player1;
 		User *_player2;
+		Poco::UInt8 _gameWinner;
 		Poco::UInt8 _currentPlayer;
 		Poco::UInt16 _currentStoneCount;
 		std::list<PutInfo> _puts;

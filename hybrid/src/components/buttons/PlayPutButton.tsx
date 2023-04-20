@@ -18,7 +18,7 @@ export default function PlayPutButton({
   );
 }
 
-const Button = styled.button<{ active: boolean }>`
+export const Button = styled.button<{ active: boolean }>`
   ${({ theme }) => theme.flexs.center}
   height: 90%;
   width: 10rem;

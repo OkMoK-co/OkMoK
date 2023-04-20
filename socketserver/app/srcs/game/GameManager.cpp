@@ -71,12 +71,12 @@ Poco::Int8 GameManager::checkWinner(Poco::Int32 gameIndex)
 	if (game->checkVictory())
 	{
 		result = game->getPutsBack().player;
-		game->endGame();
+		game->setGameWinner(result);
 	}
 	if (game->checkDraw())
 	{
 		result = 3;
-		game->endGame();
+		game->setGameWinner(result);
 	}
 
 	return result;

@@ -42,9 +42,8 @@ class PacketManager
 		void processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 
 		void broadcastPutInfo(Poco::Int32 roomIndex, PutInfo putInfo, Poco::Int8 result);
-		void broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result);
+		void broadcastGameResult(Poco::Int32 roomIndex);
 		void makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put, Poco::Int8 result);
-		void makeGameResult(R_GAME_RESULT_RESPONSE_PACKET &packet, Poco::Int8 result);
 
 		void processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);
 		void processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize);

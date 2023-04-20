@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { socketVar } from '@/socket/variable';
 import { useRequest } from '@/hooks/useRequest';
 import Timer from '@/components/game/Timer';
+import { Button } from '../buttons/PlayPutButton';
 
 interface timerAndPutProps {
   active: boolean;
@@ -44,21 +45,23 @@ export default function TimerAndPut({ active, point }: timerAndPutProps) {
 const TimerWrap = styled.div`
   display: flex;
   justify-content: space-around;
-  height: 2rem;
-  color: white;
-  background-color: black;
-  border-radius: 1rem;
-  border: solid white;
+  width: 20rem;
+  height: 2.4rem;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
-const PutButton = styled.button<{ active: boolean }>`
-  color: black;
-  background-color: ${(props) => (props.active ? '#00ff00' : '#808080')};
+const PutButton = styled(Button)<{ active: boolean }>`
+  color: ${({ theme }) => theme.colors.black};
+  z-index: 2;
+  position: absolute;
+  background-color: ${({ active, theme }) =>
+    active ? theme.colors.green : theme.colors.darkgray};
   border: none;
-  border-radius: 1rem;
   width: 5rem;
-  height: 1.5rem;
+  height: 2.4rem;
   &:hover {
-    cursor: ${(props) => (props.active ? 'pointer' : 'default')};
+    cursor: ${({ active }) => (active ? 'pointer' : 'default')};
+    background-color: ${({ active, theme }) =>
+      active ? theme.colors.green : theme.colors.darkgray};
   }
 `;

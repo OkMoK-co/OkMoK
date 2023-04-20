@@ -1,6 +1,8 @@
 import styled from 'styled-components';
-
-export default function Header() {
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+export default function Header({ children }: HeaderProps) {
   return (
     <Container>
       <h1>
@@ -10,6 +12,7 @@ export default function Header() {
         <span>o</span>
         <span>K</span>
       </h1>
+      {children}
     </Container>
   );
 }
