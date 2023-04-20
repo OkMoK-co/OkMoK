@@ -3,7 +3,7 @@
 #include "PacketID.hpp"
 #include "PacketErrorCode.hpp"
 
-#include <Poco/Types.h>
+#include "../util/PocoType.hpp"
 
 /**
  * @brief 클라이언트의 요청 패킷입니다.
