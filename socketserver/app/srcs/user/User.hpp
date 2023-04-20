@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Poco/Types.h>
+#include "../util/PocoType.hpp"
 
 class User
 {

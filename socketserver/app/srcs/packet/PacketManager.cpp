@@ -186,6 +186,14 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 {
 	ROOM_CREATE_RESPONSE_PACKET packet = makePacketHeader<ROOM_CREATE_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::ROOM_CREATE_RESPONSE);
 
+	User *user = _userManager.takeUserByConnIndex(connIndex);
+	if (user->getRoomIndex() != -1)
+	{
+		packet.type = (Poco::UInt8)PACKET_OPTION::FAIL;
+		sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
+		return ;
+	}
+
 	Poco::Int32 roomIndex = _roomManager.takeInactiveRoomIndex();
 	if(roomIndex == -1)
 	{
@@ -194,7 +202,6 @@ void PacketManager::processCreateRoom(Poco::Int32 connIndex, char* pBodyData, Po
 		return ;
 	}
 
-	User *user = _userManager.takeUserByConnIndex(connIndex);
 	_roomManager.createRoom((Poco::Int32)roomIndex, user);
 	_userManager.deleteMainUsers(user);
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
@@ -368,7 +375,7 @@ void PacketManager::processReadyUser(Poco::Int32 connIndex, char* pBodyData, Poc
 	if (users.size() == 2 && users.front()->getReady() && users.back()->getReady())
 	{
 		_gameManager.createGame(roomIndex, users.front(), users.back());
-		broadcastGameStart(gameIndex, users);
+		broadcastGameStart(user->getGameIndex(), users);
 	}
 }
 

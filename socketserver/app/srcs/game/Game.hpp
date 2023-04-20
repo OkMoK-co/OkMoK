@@ -1,13 +1,16 @@
 #pragma once
 
 #include <list>
-#include <chrono>
-#include <Poco/Types.h>
-#include <dispatch/dispatch.h>
 
 #include "Okmok.hpp"
 #include "../user/User.hpp"
-#include "GameTimer.hpp"
+#include "../util/PocoType.hpp"
+
+#ifdef __linux__
+	#include "linux/GameTimer.hpp"
+#elif defined(__APPLE__)
+	#include "mac/GameTimer.hpp"
+#endif
 
 struct PutInfo
 {

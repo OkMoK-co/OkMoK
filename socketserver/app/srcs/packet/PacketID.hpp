@@ -1,5 +1,6 @@
 #pragma once
-#include <Poco/types.h>
+
+#include "../util/PocoType.hpp"
 /**
  * @brief 패킷 ID를 정의하는 부분입니다.
  */
