@@ -129,11 +129,11 @@ void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result
 {
 	R_GAME_RESULT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
 
-	makeGameResult(broadcastPacket, result);
-
 	std::list<User *> users = _roomManager.takeRoomByRoomIndex(roomIndex)->getUsers();
+	Game *game = _gameManager.takeGameByGameIndex(roomIndex);
 	for (User *user : users)
 	{
+		broadcastPacket.result = game->takeGameResultByUser(user);
 		sendPacketFunc(user->getIndex(), (char *)&broadcastPacket, broadcastPacket.packetSize);
 	}
 }
@@ -151,8 +151,8 @@ void PacketManager::processDisconnected(Poco::Int32 connIndex, char* pBodyData, 
 		Poco::Int8 result = 3 - game->takePlayerByUser(user);
 
 		R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
-
-		makeGameResult(gameResultPacket, result);
+		gameResultPacket.result = result;
+		
 
 		User *rivalUser = game->takeRivalUserByUser(user);
 		sendPacketFunc(rivalUser->getIndex(), (char *)&gameResultPacket, gameResultPacket.packetSize);
@@ -387,11 +387,6 @@ void PacketManager::makePutGame(R_GAME_PUT_RESPONSE_PACKET &packet, PutInfo &put
 	packet.time = result ? 0 : put.time;
 }
 
-void PacketManager::makeGameResult(R_GAME_RESULT_RESPONSE_PACKET &packet, Poco::Int8 result)
-{
-	packet.result = result;
-}
-
 void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
 {
 	GAME_PUT_RESPONSE_PACKET packet = makePacketHeader<GAME_PUT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::GAME_PUT_RESPONSE);
@@ -416,7 +411,8 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 	sendPacketFunc(connIndex, (char *)&packet, packet.packetSize);
 
 	Poco::Int32 gameIndex = user->getGameIndex();
-	PutInfo putInfo = _gameManager.takeGameByGameIndex(gameIndex)->getPutsBack();
+	Game *game = _gameManager.takeGameByGameIndex(gameIndex);
+	PutInfo putInfo = game->getPutsBack();
 	Poco::Int8 result = _gameManager.checkWinner(gameIndex);
 
 	broadcastPutInfo(roomIndex, putInfo, result);
@@ -425,8 +421,9 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 	{
 		return;
 	}
-
+	
 	broadcastGameResult(roomIndex, result);
+	game->endGame();
 }
 
 void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Poco::Int16 bodySize)
@@ -455,7 +452,7 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 
 	Game *game = _gameManager.takeGameByGameIndex(gameIndex);
 	Poco::Int8 result = 3 - game->takePlayerByUser(user);
-
+	game->setGameWinner(result);
 	broadcastGameResult(roomIndex, result);
 
 	game->endGame();

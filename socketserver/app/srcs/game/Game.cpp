@@ -38,6 +38,28 @@ Poco::UInt32 Game::getCurrentTurn()
 	return _puts.size();
 }
 
+void Game::setGameWinner(Poco::UInt8 result)
+{
+	_gameWinner = result;
+}
+
+Poco::UInt8 Game::takeGameResultByUser(User *user)
+{
+	if (_gameWinner == 3) {
+		return 3;
+	}
+
+	if (_gameWinner == 1 && _player1 == user) {
+		return 1;
+	}
+
+	if (_gameWinner == 2 && _player2 == user) {
+		return 1;
+	}
+
+	return 2;
+}
+
 Poco::UInt8 Game::takePlayerByUser(User *user)
 {
 	if (_player1 == user)
@@ -92,6 +114,7 @@ void Game::endGame()
 	_player2->unReady();
 	_player1 = NULL;
 	_player2 = NULL;
+	_gameWinner = 0;
 	_currentPlayer = 0;
 	_currentStoneCount = 0;
 	_puts.clear();
