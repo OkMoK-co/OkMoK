@@ -10,6 +10,7 @@ Game::Game(Poco::Int32 gameIndex)
 	_currentPlayer = 0;
 	_currentStoneCount = 0;
 	_gameTimer.init(gameIndex);
+	_gameWinner = 0;
 	memset(_gameBoard, 0, 15 * 15);
 }
 

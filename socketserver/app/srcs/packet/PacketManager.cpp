@@ -125,7 +125,7 @@ void PacketManager::broadcastGameStart(Poco::Int32 gameIndex, std::list<User*>us
 	}
 }
 
-void PacketManager::broadcastGameResult(Poco::Int32 roomIndex, Poco::Int8 result)
+void PacketManager::broadcastGameResult(Poco::Int32 roomIndex)
 {
 	R_GAME_RESULT_RESPONSE_PACKET broadcastPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
 
@@ -149,12 +149,12 @@ void PacketManager::processDisconnected(Poco::Int32 connIndex, char* pBodyData, 
 	{
 		Game *game = _gameManager.takeGameByGameIndex(gameIndex);
 		Poco::Int8 result = 3 - game->takePlayerByUser(user);
-
-		R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
-		gameResultPacket.result = result;
+		game->setGameWinner(result);
 		
-
+		R_GAME_RESULT_RESPONSE_PACKET gameResultPacket = makePacketHeader<R_GAME_RESULT_RESPONSE_PACKET>((Poco::UInt16)PACKET_ID::R_GAME_RESULT_RESPONSE);
+		
 		User *rivalUser = game->takeRivalUserByUser(user);
+		gameResultPacket.result = game->takeGameResultByUser(rivalUser);
 		sendPacketFunc(rivalUser->getIndex(), (char *)&gameResultPacket, gameResultPacket.packetSize);
 
 		game->endGame();
@@ -422,7 +422,7 @@ void PacketManager::processPutGame(Poco::Int32 connIndex, char* pBodyData, Poco:
 		return;
 	}
 	
-	broadcastGameResult(roomIndex, result);
+	broadcastGameResult(roomIndex);
 	game->endGame();
 }
 
@@ -453,7 +453,7 @@ void PacketManager::processGiveUpGame(Poco::Int32 connIndex, char* pBodyData, Po
 	Game *game = _gameManager.takeGameByGameIndex(gameIndex);
 	Poco::Int8 result = 3 - game->takePlayerByUser(user);
 	game->setGameWinner(result);
-	broadcastGameResult(roomIndex, result);
+	broadcastGameResult(roomIndex);
 
 	game->endGame();
 }
