@@ -24,6 +24,7 @@ export function Player2({ nickname }: PlayerProps) {
 
 const Player1Wrap = styled.div`
   display: flex;
+  align-items: center;
   width: 10rem;
   div {
     background-color: ${({ theme }) => theme.colors.green};
