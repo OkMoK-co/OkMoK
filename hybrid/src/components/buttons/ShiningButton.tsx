@@ -3,12 +3,18 @@ import styled from 'styled-components';
 
 interface ShinningButtonProps {
   value: string;
+  moveTo: string;
+  clickHandler?: () => void;
 }
 
-export default function ShiningButton({ value }: ShinningButtonProps) {
+export default function ShiningButton({
+  value,
+  moveTo,
+  clickHandler,
+}: ShinningButtonProps) {
   return (
     <ShinningEffect>
-      <Link href='/login'>
+      <Link href={moveTo} onClick={clickHandler}>
         <span></span>
         <span></span>
         <span></span>
