@@ -11,51 +11,42 @@ interface SocketConnectProps {
 }
 
 export default function SocketConnect({ children }: SocketConnectProps) {
+  const loginHandler = useRequest({ id: socketVar.LOGIN_REQUEST });
   const [socket, setSocket] = useRecoilState(socketState);
   const [response, setResponse] = useRecoilState(responseState);
   const router = useRouter();
 
   useEffect(() => {
-    if (!socket) {
-      const newSocket = new WebSocket('ws://localhost:8080');
-
-      newSocket.binaryType = 'arraybuffer';
-
-      newSocket.addEventListener('open', () => {
+    if (socket) {
+      socket.binaryType = 'arraybuffer';
+      socket.onopen = () => {
         console.log('WebSocket connection opened!');
-        setSocket(newSocket);
-        const buffer = new ArrayBuffer(5);
-        const data = new DataView(buffer);
-        data.setInt16(0, 5, true);
-        data.setInt16(2, socketVar.LOGIN_REQUEST, true);
-        data.setInt8(4, 0);
-        newSocket.send(data);
-      });
-
-      newSocket.addEventListener('message', (event) => {
+        loginHandler();
+      };
+      socket.onmessage = (event) => {
         console.log('Received message:', event.data);
-
         const data = new DataView(event.data);
-
         const size = data.getUint16(0, true);
         const id = data.getUint16(2, true);
         const option = data.getUint8(4);
-
         routeResponse[id]({
           packet: { data, id, option, router },
           setResponse,
         });
-      });
-
-      newSocket.addEventListener('close', () => {
+      };
+      socket.onclose = () => {
         console.log('WebSocket connection closed!');
-      });
+        setSocket(null);
+      };
+    } else {
+      /** todo: 연결이 끊기면 모달로 안내창 띄워준 후 로그인페이지로 이동 필요*/
+      router.push('/login');
     }
 
     return () => {
       socket?.close();
     };
-  }, []);
+  }, [socket]);
 
   return <>{children}</>;
 }

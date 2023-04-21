@@ -25,6 +25,7 @@ const colors = {
 };
 
 const fontsizes = {
+  giantlarge: '6rem',
   xxlarge: '3rem',
   xlarge: '2rem',
   large: '1.2rem',
