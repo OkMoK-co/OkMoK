@@ -1,15 +1,10 @@
 import styled from 'styled-components';
 import Logo from './Logo';
 
-interface HeaderProps {
-  children?: React.ReactNode;
-}
-
-export default function Header({ children }: HeaderProps) {
+export default function Header() {
   return (
     <Container>
       <Logo />
-      {children}
     </Container>
   );
 }

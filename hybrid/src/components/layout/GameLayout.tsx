@@ -12,9 +12,11 @@ export default function GameLayout({ children }: GameLayoutProps) {
   return (
     <>
       <Container>
-        <Header>
+        <GameHeaderWrap>
+          <div style={{ width: '3rem' }} />
+          <Header />
           <ExitButton />
-        </Header>
+        </GameHeaderWrap>
         {children}
         <Footer />
       </Container>
@@ -23,3 +25,8 @@ export default function GameLayout({ children }: GameLayoutProps) {
 }
 
 const Container = styled(LayoutContainer)``;
+
+const GameHeaderWrap = styled.div`
+  ${({ theme }) => theme.flexs.spaceBetween};
+  width: 100%;
+`;

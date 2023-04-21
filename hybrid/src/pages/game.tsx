@@ -74,6 +74,7 @@ const Container = styled(ContentContainer)``;
 
 const GameWrapper = styled.div`
   ${({ theme }) => theme.flexs.centerColumn};
+  font-size: ${({ theme }) => theme.fontsizes.medium};
 `;
 
 const GameTopWrap = styled.div`
