@@ -1,4 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
+import { Aldrich } from 'next/font/google';
+
+const aldrich = Aldrich({ weight: '400', subsets: ['latin'] });
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -14,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
 		background-color: ${({ theme }) => theme.colors.black};
 		color: ${({ theme }) => theme.colors.white};
-		font-family: 'Aldrich', sans-serif;
+		font-family: ${aldrich.style.fontFamily};
 	}
 
 	button {
