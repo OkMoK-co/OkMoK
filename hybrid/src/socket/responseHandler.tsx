@@ -1,11 +1,11 @@
 import { routeResponseProps, room, putInfo } from '@/utils/type/socketType';
 
 export function loginHandler({
-  packet: { data, id, option },
+  packet: { data, id, option, router },
   setResponse,
 }: routeResponseProps) {
   if (!option) {
-    alert('Failed to login');
+    router.push({ pathname: '/login', query: { state: 'full' } });
     return;
   }
 
@@ -16,6 +16,8 @@ export function loginHandler({
     packetId: id,
     data: { id: userId, nickname },
   }));
+
+  router.push('/');
 }
 
 /** room 관련 */

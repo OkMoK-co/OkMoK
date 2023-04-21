@@ -1,5 +1,5 @@
-import { ContentContainer } from '@/styles/common-style';
 import styled from 'styled-components';
+import { ContentContainer } from '@/styles/common-style';
 import ShiningBackground from '@/components/animation/ShiningBackground';
 import ShiningButton from '@/components/buttons/ShiningButton';
 
@@ -10,7 +10,7 @@ export default function Page404() {
       <Content>
         <h1> 404 </h1>
         <p> Page Not Found </p>
-        <ShiningButton value={'Go Home'} />
+        <ShiningButton value={'Go Home'} moveTo={'/login'} />
       </Content>
     </Container>
   );

@@ -19,6 +19,7 @@ export const LayoutContainer = styled.div`
   }
 `;
 
+/** min-height: calc(100% - ${headerHeight + footerHeight + layoutMargin}rem) */
 export const ContentContainer = styled.main`
   width: calc(75rem - 30rem);
   min-height: calc(100% - (8rem + 6rem + 0.6rem));
